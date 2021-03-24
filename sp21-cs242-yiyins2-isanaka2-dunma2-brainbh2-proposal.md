@@ -104,7 +104,8 @@ Dun Ma:
   - "course-info" query endpoint to get selected course information given course code (subject and course number)
   - "schedule" query endpoint to generate schedules given list of course codes.
   - "user" query endpoint to get user information
-
+  - `/graphql-explorer` for GraphQL Explorer API.
+  
 Yiyin Shen: 
 - Clean up GPA data from GPAs of Every Courses at UIUC.
 - Store GPA data into MongoDB
@@ -123,6 +124,10 @@ Yiyin Shen:
 ### Week 3:
 Dun Ma: 
 - Update the algorithm to generate schedules based on restrictions
+  - restrictions including:
+    - minimum mandatory course
+    - maximum course
+    - breaks 
 - Score schedules based on importance factors
 - API
   - Update "schedule" query endpoint with restrictions and scores
@@ -163,72 +168,107 @@ Yiyin Shen:
 Dun Ma: 
 | Category | Total Score Allocated | Detailed Rubrics |
 | --- | --- | --- |
+| Set up Flask server | 1 | +1 for properly set up flask server |
+| Set up React App | 1 | +1 for properly set up React App |
+| Set up MongoDB | 1 | +1 for properly set up MongoDB |
+| Backend authentication | 4 | +1 for implementing `/login` route <br /> +1 for implementing `/logout` route <br /> +1 for properly set up google authentication <br /> +1 for properly storing user information to MongoDB|
+| Frontend UI | 2 | +1 for Sign in Screen <br /> +1 for Profile screen|
+| Frontend authentication | 4 | +1 for handling google login workflow <br /> +1 for navigation to profile screen and display correct information <br /> +1 for login failed handling <br /> +1 for implementing logout |
 | Unit Test | 5 | +0.5 per unit test |
+| Manual Test Plan | 5 | +0.5 per unit test  |
 
 Yiyin Shen: 
 | Category | Total Score Allocated | Detailed Rubrics |
 | --- | --- | --- |
-| Set up Flask server | 1 | +1 properly set up Flask server |
 | Connect with CIS API | 1 | +1 successfully connect with CIS API |
-| Fetch a list of all subjects | 2 | +1 fetch and parse <br> + 1 store in MongoDB |
-| Fetch a list of all courses | 2 | +1 fetch and parse <br> + 1 store in MongoDB |
-| Create a Course type/object | 1 | +1 create a course type/object |
+| Create a Course Model | 3 | -2 for no data validation |
+| Fetch a list of all subjects | 2 | +1 fetch and parse <br> +1 store in MongoDB |
+| Fetch a list of all courses | 2 | +1 fetch and parse <br> +1 store in MongoDB |
 | Fetch course information | 4 | +1 fetch <br> +2 parse into Course type/object <br> + 1 store in MongoDB |
+| Error Handling | 2 | +1 for correctly handling CIS API error <br> +1 for correctly handling MongoDB error |
 | Unit test | 5 | +0.5 per unit test |
-
+| Manual Test Plan | 5 | +1 per manual test |
 ### Week 2: 
 Dun Ma: 
 | Category | Total Score Allocated | Detailed Rubrics |
 | --- | --- | --- |
-| Set up GraphQL API | 1 | +1 properly set up GraphQL API |
-| api/subjects/[semester-year] | 3 | +2 support this API command and return correctly <br> +1 error handling |
-| api/courses/[semester-year]/[subject] | 3 | +2 support this API command and return correctly <br> +1 error handling |
-| api/course-info/[semester-year]/[subject-course number] | 3 | +2 support this API command and return correctly <br> +1 error handling |
-| api/schedules/[semester-year]/[subject1-course number1, subject2-course number2, ...]| 3 | +2 support this API command and return correctly <br> +1 error handling |
-| Schedule object | 2 | +2 properly create the Schedule type/object |
-| Schedule Algorithm | 5 | +1 schedules are correct <br> +2 implement restrictions <br> +2 use some advanced techniques to improve efficiency (e.g. dynamic programming) |
-| Unit Test | 6 | +0.5 per unit test |
+| Schedule object | 2 | +1 properly create the Schedule type/object <br> +1 properly connecting to MongoDB |
+| Set up GraphQL API | 9 | +1 properly set up GraphQL API <br> +1 "subjects" query <br> +1 "courses" query <br> +1 "course-info" query <br> +1 "schedule" query <br> +1 "user" query <br> +1 correct authentication handling <br> +1 malformed query handling <br> +1 properly set up GraphQL Explorer|
+| Schedule Algorithm | 6 | +3 schedules are correct <br> +1 handling linked sections <br> +2 use some advanced techniques to improve efficiency (e.g. dynamic programming) |
+| GraphQL manual Test | 5 | +0.5 per manual test |
+| Scheduler Unit Test | 5 | +0.5 per unit test | 
 
 Yiyin Shen: 
 | Category | Total Score Allocated | Detailed Rubrics |
 | --- | --- | --- |
 | GPA Data Cleaning | 5 | +1 convert GPA data into propitiate format <br> +2 store GPA to corresponding course information <br> +2 for error handling (missing/wrong GPA, instructor, etc.) |
-| Set up React Native App | 1 | +1 properly set up React Native App |
-| Home Screen | 5 | +1 add course form & course list <br> +1 generate schedule button & schedule list <br> + 2 restriction input forms <br> +1 importance factors' sliders |
-| Course information Screen | 5 | +1 general course information <br> +2 section information <br> +2 GPA and Rate My Professor information |
-| Schedule Screen | 3 | +1 calendar <br> +2 add courses | 
-| Unit Test | 2 | +0.5 per unit test |
-| Manual Test Plan | 4 | +1 per screen <br> +1 error handling view |
+| Static Home Screen | 4 | +1 add course form & course list <br> +1 generate schedule button & schedule list <br> +1 restriction input forms <br> +1 importance factors' sliders |
+| Static Course information Screen | 3 | +1 general course information <br> +1 section information <br> +1 GPA and Rate My Professor information |
+| Static Schedule Screen | 3 | +1 calendar <br> +2 add courses | 
+| Unit Test | 5 | +0.5 per unit test |
+| Manual Test Plan | 5 | +1 per screen (max 4) <br> +1 error handling view |
 
 ### Week 3: 
 Dun Ma: 
 | Category | Total Score Allocated | Detailed Rubrics |
 | --- | --- | --- |
-| Score Algorithm | 4 | +1 algorithm is correct <br> +2 implement importance factor's weight <br> +1 improve efficiency |
-| Add score to API | 1 | +1 successfully add schedule's score to API |
-| Unit Test | 4 | +0.5 per unit test |
+| Schedule Algorithm | 5 | +1 implement mandatory course restriction <br> +1 implement max course restriction <br> +2 implement breaks restriction <br> +1 algorithm is correct |
+| Score Algorithm | 2 | +1 implement importance factor's weight <br> +1 algorithm is correct |
+| Update "schedule" API | 5 | +1 update "schedule" GraphQL endpoint with for each new restriction <br> +1 sort schedule by score <br> +1 authentication and error handling |
+| New "save" API | 3 | +1 implementing "save" mutation in GraphQL <br> +1 saving to MongoDB <br> +1 authentication and error handling |
+| Unit Test | 10 | +0.5 per unit test |
 
 Yiyin Shen: 
 | Category | Total Score Allocated | Detailed Rubrics |
 | --- | --- | --- |
-| Enable Google sign-in | 2 | +2 properly enable Google sign-in |
-| Sign-in Screen | 1 | +1 sign-in button |
-| Profile Screen | 2 | +1 user information <br> +1 saved schedule list |
-| Fetch user information from Google | 1 | +1 successfully fetch information |
-| Store user information into MongoDB | 1 | +1 successfully stored information |
-| api/user/[user-id] | 3 | +2 support this API command and return correctly <br> +1 error handling |
-| api/saved-schedules/[user-id] | 3 | +2 support this API command and return correctly <br> +1 error handling |
-| Unit test | 3 | +0.5 per unit test |
-| Manual Test Plan | 3 | +1 per screen <br> +1 error handling view |
+| Update Home Screen | 4 | +1 add course form & course list usable <br> +1 generate schedule button & schedule list connected to backend <br> +1 restriction input forms usable <br> +1 importance factors' sliders <br> navigate to other screens |
+| Update Course information Screen | 4 | +2 connected to backend <br> +1 handle loading <br> +1 handle error |
+| Update Schedule Screen | 4 | +2 add courses <br> +1 handle loading <br> +1 handle error | 
+| Update Profile Screen | 3 | +1 add list of saved schedules <br> +1 connect to backend <br> +1 handle error | 
+| Unit Test | 5 | +0.5 per unit test |
+| Manual Test Plan | 5 | +1 per screen (max 4) <br> +1 error handling view |
 
 ### Week 4: 
 Dun Ma: 
 | Category | Total Score Allocated | Detailed Rubrics |
 | --- | --- | --- |
-
+| scraping RateMyProfessor | 13 | +3 use Selenium correctly <br> +4 scraped Professor information correctly <br> +2 scrape on demand <br> +2 store scraped data in MongoDB <br> +2 handle scraping error <br> | 
+| Unit Test| 5 | +0.5 per unit test |
+| Manual Test Plan | 5 | +0.5 per manual test |
 Yiyin Shen: 
 | Category | Total Score Allocated | Detailed Rubrics |
 | --- | --- | --- |
+| Connect Professor and Course | 3 | +2 establish connections between professors and courses <br> +1 handle errors (e.g. missing professor) |
+| Score Algorithm | 4 | +2 add professor factors to importance factor <br> +1 algorithm is correct  <br> +1 handle missing data (i.e. no professor found in rateMyProfessor) |
+| Update "schedule" API | 3 | +3 update "schedule" GraphQL endpoint with for each new scoring system |
+| Unit Test | 5 | +0.5 per unit test |
+| Manual Test Plan | 5 | +1 per manual test |
 
-## Figure
+## Figures
 ---
+### Main Screen
+![Alt](screenshots/MainScreen.jpg "Main Screen")
+
+### Login Screen
+![Alt](screenshots/LoginScreen.jpg "Login Screen")
+
+### Restriction Tab
+![Alt](screenshots/RestrictionTab.jpg "Restriction Tab")
+
+### User Profile Screen
+![Alt](screenshots/UserProfileScreen.jpg "User Profile Screen")
+
+### Add Course Tab
+![Alt](screenshots/AddCourseTab.jpg "Add Course Tab")
+
+### View Schedule Screen
+![Alt](screenshots/ViewScheduleScreen.jpg "View Schedule Screen")
+
+### Factor Importance Tab
+![Alt](screenshots/FactorImportanceTab.jpg "Factor Importance Tab")
+
+### Break Tab
+![Alt](screenshots/BreakTab.jpg "Break Tab")
+
+### Course Info Screen
+![Alt](screenshots/CourseInfoScreen.jpg "Course Info Screen")
