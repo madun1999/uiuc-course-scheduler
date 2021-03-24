@@ -7,10 +7,10 @@ Yiyin Shen (yiyins2) Moderator: Akhil Isanaka (isanaka2)
 ## Abstract 
 ---
 ### Project Purpose 
-Create a mobile app that show information about courses user added fetched from various platforms (Course Explorer, Rate My Professor, GPAs of Every Courses at UIUC) and generate possible schedules accordingly. 
+Create a mobile app that shows information about courses user added fetched from various platforms (Course Explorer, Rate My Professor, GPAs of Every Courses at UIUC) and generates possible schedules accordingly. 
 
 ### Project Motivation 
-Students need to visit a lot of platforms to fetch information about one course and it takes a great deal of effort to manually generate a schedule to balance all the factors (GPAs, professor ratings). This app want to minimize this effort by writing a smart algorithm to generate possible schedules and give scores of each schedule by user-given factors' weight. 
+Students need to visit a lot of platforms to fetch information about one course and it takes a great deal of effort to manually generate a schedule to balance all the factors (GPAs, professor ratings). This app want to minimize this effort by writing a smart algorithm to generate possible schedules and give score of each schedule by user-given factors' weight. 
 
 ## Technical Specification
 ---
@@ -18,9 +18,9 @@ Students need to visit a lot of platforms to fetch information about one course 
   - CIS API (https://courses.illinois.edu/cisdocs/) (RESTful API)
   - Rate My Professor (Selenium)
   - GPAs of Every Courses at UIUC (Static)
-- Programming Language: mobile app: JavaScript; backend: python 
-- Stylistic Conventions: Python style guide, JavaScript Style Guide 
-- IDE: Visual Studio Code, PyCharm Professional 
+- Programming Language: mobile app: React Native with JavaScript; backend: python 
+- Stylistic Conventions: Python style guide, Airbnb React Native guideline,  JavaScript Style Guide 
+- IDE: Visual Studio Code, PyCharm 
 - Interface: React Native
 - Backend: Flask, MongoDB, Selenium, GraphQL API
 
@@ -28,10 +28,9 @@ Students need to visit a lot of platforms to fetch information about one course 
 ---
 - User can Google sign-in to save courses and schedules. 
 - For each course the following information will be demonstrated:
-  - general information (meeting time, location, instructors, and etc.) from course explorer; 
-  - ratings of professors, difficulties of the course, will-take-again rate, popular comments from rate my professor;
-  - GPAs for each professor from GPAs of Every Courses at UIUC.
-- User can input the year and semester to add courses and generate schedule. 
+  - general information (meeting time, location, instructors, and etc.) from Course Explorer; 
+  - ratings of professors, difficulties of courses, will-take-again rate, popular comments from Rate My Professor;
+  - GPA for each professor from GPAs of Every Courses at UIUC.
 - User can mark each course as mandatory or elective. 
 - User can input the minimum number of mandatory courses to take. 
 - User can input the maximum number of courses to take. 
@@ -42,31 +41,38 @@ Students need to visit a lot of platforms to fetch information about one course 
   - Professor rating
   - Course difficulty
   - Will-take-again rate
-- A score will be generated for each schedule based on the above factors. 
-
+- A score will be generated for each schedule based on the above factors
+- Generated schedules will be shown.
+- User can request previously generated schedules to be shown
 ## Brief Timeline
 ---
 ### Week 1: 
 Dun Ma: 
-- Create a Selenium scrapper (We chose Selenium since Rate My Professor updates dynamically.) 
-- Scrape the following information from Rate My Professor:
-  - For each course: 
-    - Professor's rating 
-    - Course difficulty
-    - Will-take-again rate 
-    - Popular comments 
-    - Number of ratings/comments 
-- Store the above information into MongoDB 
+- Set up Flask server with `flask_login`
+- Set up Authentication using Google sign in 
+  - `/login` route for token authentication.
+  - `/logout` route for log out
+- Fetch Google user information: 
+  - Google Account ID
+  - email
+  - name
+- Store the above user information into MongoDB on first login
+- Set up React Native App: 
+  - Sign in screen
+    - Button for Google Sign-in. Goes to Profile screen if successful.
+  - Profile screen
+    - Display user information (email and name)
+    - Button for Log out. 
+  
 
 Yiyin Shen: 
-- Set up Flask server 
+
 - Connect with CIS API 
 - Given the year and semester: 
   - Fetch a list of all subjects in UIUC
   - Fetch a list of all courses for each subject
-  - Store the above information into MongoDB
   - Able to fetch all information about the course and their IDs, including: 
-    - Course explorer URL 
+    - Course Explorer URL 
     - Year
     - Semester 
     - Subject 
@@ -91,49 +97,66 @@ Yiyin Shen:
   
 ### Week 2: 
 Dun Ma: 
-- Create a GraphQL API: 
-  - api/subjects/[semester-year] to get a list of all subjects offered at semester-year 
-  - api/courses/[semester-year]/[subject] to get a list of all courses offered by subject at semester-year 
-  - api/course-info/[semester-year]/[subject-course number] to get all course information by the course offered at semester-year
-  - api/schedules/[semester-year]/[subject1-course number1, subject2-course number2, ...] to get all possible schedules given the list of courses. 
-- Create an algorithm to generate schedules based on courses and restrictions. 
+- Create an algorithm to generate schedules based on courses. 
+- `/graphql` route for GraphQL API. Requires authentication.
+  - "subjects" query endpoint to get a list of all subjects
+  - "courses" query endpoint to get a list of all courses given subject
+  - "course-info" query endpoint to get selected course information given course code (subject and course number)
+  - "schedule" query endpoint to generate schedules given list of course codes.
+  - "user" query endpoint to get user information
 
 Yiyin Shen: 
 - Clean up GPA data from GPAs of Every Courses at UIUC.
 - Store GPA data into MongoDB
-- Create the following UI screens: 
+- Create the following static UI screen templates: 
   - Home:
     - add course + course list
     - generate schedule + schedule list
     - restrictions inputs
-    - factor importance sliders
+    - factor importance sliders'
+    - button for generate schedule
   - View courses' information 
   - View schedule 
+    - Display a schedule graphically
+    - A button to save the schedule
   
 ### Week 3:
 Dun Ma: 
-- Create an algorithm to score a schedule based on importance factors
-- Update api/schedules with score
+- Update the algorithm to generate schedules based on restrictions
+- Score schedules based on importance factors
+- API
+  - Update "schedule" query endpoint with restrictions and scores
+  - Add "save" mutation endpoint to save selected schedules
 
 
-Yiyin Shen  
-- Enable Google sign in 
-- Fetch Google user information: 
-  - Six fields of Google ID Token
-  - email
-  - name
-- Store the above user information into MongoDB 
-- Save liked schedules into MongoDB 
-- More API commands: 
-  - api/user/[user-id] to get user information
-  - api/saved-schedules/[user-id] to get user's saved schedules
-- UI: 
-  - Profile screen: 
-    - User information 
-    - Saved schedules
-  - Sign in screen: 
+Yiyin Shen:
+- Update UI:
+  - Make the screen from previous week dynamic 
+  - Profile
+    - Display a list of saved schedules in addition to profile.
+  
+
   
 ### Week 4: 
+Dun Ma: 
+- Create a Selenium scrapper (We chose Selenium since Rate My Professor updates dynamically.) 
+- Scrape the following information from Rate My Professor:
+  - For each course: 
+    - Professor's rating 
+    - Course difficulty
+    - Will-take-again rate 
+    - Popular comments 
+    - Number of ratings/comments 
+- Store the above information into MongoDB 
+
+
+Yiyin Shen:
+- Update the algorithm to generate schedules based on more restrictions from rate my professor information
+  - Establish connection between courses and professors.
+- Score schedules based on importance factors from rate my professor information
+- API
+  - Update "schedule" query endpoint with new restrictions and scores
+
 ## Rubrics
 ---
 ### Week 1: 
