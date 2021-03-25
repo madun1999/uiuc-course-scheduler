@@ -235,6 +235,7 @@ Dun Ma:
 | scraping RateMyProfessor | 13 | +3 use Selenium correctly <br> +4 scraped Professor information correctly <br> +2 scrape on demand <br> +2 store scraped data in MongoDB <br> +2 handle scraping error <br> | 
 | Unit Test| 5 | +0.5 per unit test |
 | Manual Test Plan | 5 | +0.5 per manual test |
+
 Yiyin Shen: 
 | Category | Total Score Allocated | Detailed Rubrics |
 | --- | --- | --- |
