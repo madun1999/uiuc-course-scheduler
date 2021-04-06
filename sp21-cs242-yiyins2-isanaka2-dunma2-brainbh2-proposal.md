@@ -171,9 +171,9 @@ Dun Ma:
 | Set up Flask server | 1 | +1 for properly set up flask server |
 | Set up React App | 1 | +1 for properly set up React App |
 | Set up MongoDB | 1 | +1 for properly set up MongoDB |
-| Backend authentication | 4 | +1 for implementing `/login` route <br /> +1 for implementing `/logout` route <br /> +1 for properly set up google authentication <br /> +1 for properly storing user information to MongoDB|
+| Backend authentication | 5 | +1 for implementing `/login` route <br /> +1 for implementing `/logout` route <br /> +2 for properly set up google authentication <br /> +1 for properly storing user information to MongoDB|
 | Frontend UI | 2 | +1 for Sign in Screen <br /> +1 for Profile screen|
-| Frontend authentication | 4 | +1 for handling google login workflow <br /> +1 for navigation to profile screen and display correct information <br /> +1 for login failed handling <br /> +1 for implementing logout |
+| Frontend authentication | 5 | +2 for handling google login workflow <br /> +1 for navigation to profile screen and display correct information <br /> +1 for login failed handling <br /> +1 for implementing logout |
 | Unit Test | 5 | +0.5 per unit test |
 | Manual Test Plan | 5 | +0.5 per unit test  |
 
@@ -184,7 +184,7 @@ Yiyin Shen:
 | Create a Course Model | 3 | -2 for no data validation |
 | Fetch a list of all subjects | 2 | +1 fetch and parse <br> +1 store in MongoDB |
 | Fetch a list of all courses | 2 | +1 fetch and parse <br> +1 store in MongoDB |
-| Fetch course information | 4 | +1 fetch <br> +2 parse into Course type/object <br> + 1 store in MongoDB |
+| Fetch course information | 5 | +2 fetch <br> +2 parse into Course type/object <br> + 1 store in MongoDB |
 | Error Handling | 2 | +1 for correctly handling CIS API error <br> +1 for correctly handling MongoDB error |
 | Unit test | 5 | +0.5 per unit test |
 | Manual Test Plan | 5 | +1 per manual test |
@@ -245,6 +245,8 @@ Yiyin Shen:
 | Unit Test | 5 | +0.5 per unit test |
 | Manual Test Plan | 5 | +1 per manual test |
 
+## Scoring Spreadsheets
+Scoring Spreadsheets are available in the folder `scoring spreadsheets`.
 ## Figures
 ---
 ### Main Screen
@@ -273,3 +275,4 @@ Yiyin Shen:
 
 ### Course Info Screen
 ![Alt](screenshots/CourseInfoScreen.jpg "Course Info Screen")
+
