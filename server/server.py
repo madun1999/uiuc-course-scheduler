@@ -1,14 +1,24 @@
 """API Server"""
+from json import dumps
+from database.login import deactivate, get_user, sign_up, user_exist
 from flask import Flask, request, abort
 from flask_cors import CORS
 from multiprocessing import Process
 from werkzeug.exceptions import BadRequest
-from bookscraper.server import server_actions
-from bookscraper.database import db_tools
-from bookscraper.tools import standardize_collection_name
-
+from pymongo.errors import PyMongoError
+from google.oauth2 import id_token
+from google.auth.transport import requests
+from typing import Optional, Union
+from models.user import User
+# the app
 app = Flask(__name__)
+# CORS
 CORS(app)
+
+CLIENT_IDS = [
+    "399183208162-br9tdb9ob4figvn6jr3cds1s60lgpook.apps.googleusercontent.com",
+    "399183208162-ms7dgnih1f63lfa4qhe89m6f3ou8d7t4.apps.googleusercontent.com"
+]
 
 def wrap_response(result):
     """create response, abort if error"""
@@ -18,104 +28,69 @@ def wrap_response(result):
     else:
         return response
 
+def check_google_token() -> User:
+    """Check if the current google token is valid. Return User object if valid. """
+    # get token
+    auth = request.headers.get("Authorization")
+    if not auth:
+    	raise ValueError('Invalid Authorization.')
+    bearer = auth.split() 
+    if bearer[0] != "Bearer":
+        raise ValueError('Invalid token type.')
+    token = bearer[1]
+    # check token
+    id_info = id_token.verify_oauth2_token(token, requests.Request())
+    if id_info["aud"] not in CLIENT_IDS:
+        raise ValueError('Could not verify audience.')
+    user_id = id_info['sub']
+    user_email = id_info['email']
+    return User(user_id, user_email)
 
-def _check_id(collection):
-    """check if id is valid and exists in the database"""
-    if "id" not in request.args:
-        return 400, abort(400, "No id provided.")
-    if not request.args["id"].isdigit():
-        return 400, abort(400, "Provided id is not int.")
-    use_id = int(request.args["id"])
-    collection = standardize_collection_name(collection)
-    if len(db_tools.find(collection, {"_id": use_id})) == 0:
-        return 400, abort(400, f"No id {use_id} in collection " + collection)
-    return use_id, None
-
-
-def _check_json_payload():
-    """check if json payload is valid"""
-    if not request.is_json:
-        return 415, abort(415, "Payload is not json.")
+# login
+@app.route('/api/login', methods=["POST"])
+def login_user():
     try:
-        payload = request.get_json()
-    except BadRequest:
-        return 400, abort(400, "Data is not valid json.")
-    return payload, None
+        user = check_google_token()
+        if user_exist(user):
+            return wrap_response((200, "Logged in"))
+        else:
+            sign_up(user)
+            return wrap_response((200, "Signed up"))
+    except ValueError as error:
+        return wrap_response((400, str(error)))
+    except PyMongoError as error:
+        return wrap_response((400, "Server database error: " + str(error)))
 
+# remove account
+@app.route('/api/deactivate', methods=["DELETE"])
+def deactivate_user():
+    try:
+        user = check_google_token()
+        if user_exist(user):
+            deactivate(user)
+            return wrap_response((200, "Account deactivated"))
+        else:
+            return wrap_response((400, "You haven't signed up yet."))
+    except ValueError as error:
+        return wrap_response((400, str(error)))
+    except PyMongoError as error:
+        return wrap_response((400, "Server database error: " + str(error)))
 
-def _check_collection(collection, standardize=True):
-    """check if collection is valid, standardize if needed"""
-    if collection not in ["author", "authors", "book", "books"]:
-        return 404, abort(404, "Unknown path.")
-    if standardize:
-        collection = standardize_collection_name(collection)
-    return collection, None
-
-
-@app.route('/api/<collection>', methods=['GET'])
-def get_route(collection):
-    """GET requests"""
-    if collection == "search":
-        if "q" not in request.args:
-            return 400, abort(400, "No query provided.")
-        query = request.args["q"]
-
-        return wrap_response(server_actions.do_query(query))
-    else:
-        collection, error = _check_collection(collection)
-        if error:
-            return error
-        use_id, error = _check_id(collection)
-        if error:
-            return error
-        return wrap_response(server_actions.do_get(collection, use_id))
-
-
-@app.route('/api/<collection>', methods=['PUT'])
-def put_route(collection):
-    """PUT requests"""
-    collection, error = _check_collection(collection)
-    if error:
-        return error
-    use_id, error = _check_id(collection)
-    if error:
-        return error
-    payload, error = _check_json_payload()
-    if error:
-        return error
-    return wrap_response(server_actions.do_put(collection, use_id, payload))
-
-
-@app.route('/api/<collection>', methods=['POST'])
-def post_route(collection):
-    """POST requests"""
-    payload, error = _check_json_payload()
-    if error:
-        return error
-    if collection == "scrape":
-        p = Process(target=server_actions.do_scrape, args=(request.json,))
-        p.start()
-        p.join()
-        if p.exitcode != 0:
-            return abort(400, "Scraping Failed, check scraping arguments")
-        return "Scraping Success"
-    else:
-        collection, error = _check_collection(collection, standardize=False)
-        if error:
-            return error
-        return wrap_response(server_actions.do_post(collection, payload))
-
-
-@app.route('/api/<collection>', methods=['DELETE'])
-def delete_route(collection):
-    """DELETE requests"""
-    collection, error = _check_collection(collection)
-    if error:
-        return error
-    use_id, error = _check_id(collection)
-    if error:
-        return error
-    return wrap_response(server_actions.do_delete(collection, use_id))
+# get user info
+@app.route('/api/user', methods=["GET"])
+def get_user_profile():
+    try:
+        user = check_google_token()
+        if not user_exist(user):
+            return wrap_response((200, "Invalid user. Try log in again"))
+        else:
+            user_info = get_user(user)
+            user_info["id"] = user_info["_id"]
+            return wrap_response((200, dumps(user_info)))
+    except ValueError as error:
+        return wrap_response((400, str(error)))
+    except PyMongoError as error:
+        return wrap_response((400, "Server database error: " + str(error)))
 
 
 if __name__ == '__main__':
