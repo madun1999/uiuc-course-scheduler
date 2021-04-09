@@ -1,9 +1,9 @@
 import pytest
-from server import app as scheduler_app
+from server import app
 
 @pytest.fixture
 def app():
-    yield scheduler_app
+    yield app
 
 
 @pytest.fixture
