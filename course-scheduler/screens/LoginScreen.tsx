@@ -10,10 +10,10 @@ WebBrowser.maybeCompleteAuthSession();
 export default function LoginScreen({ navigation }) {
   const [request, response, promptAsync] = Google.useAuthRequest({
     responseType: "id_token",
-    expoClientId: '399183208162-ms7dgnih1f63lfa4qhe89m6f3ou8d7t4.apps.googleusercontent.com',
-    iosClientId: '399183208162-ms7dgnih1f63lfa4qhe89m6f3ou8d7t4.apps.googleusercontent.com',
-    androidClientId: '399183208162-ms7dgnih1f63lfa4qhe89m6f3ou8d7t4.apps.googleusercontent.com',
-    webClientId: '399183208162-br9tdb9ob4figvn6jr3cds1s60lgpook.apps.googleusercontent.com'
+    expoClientId: process.env.GOOGLE_APP_CLIENT_ID,
+    iosClientId: process.env.GOOGLE_APP_CLIENT_ID,
+    androidClientId: process.env.GOOGLE_APP_CLIENT_ID,
+    webClientId: process.env.GOOGLE_WEB_CLIENT_ID,
   });
   React.useEffect(() => {
     if (response?.type === 'success') {

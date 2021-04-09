@@ -2634,6 +2634,13 @@
   dependencies:
     "object.assign" "^4.1.0"
 
+"babel-plugin-inline-dotenv@^1.6.0":
+  "integrity" "sha512-oWd5JmwfzdFN38PMBn35Ac1d+DKCkgIxKieEyWON3QTa4hCZV+VcTxaYkfQFMTwiqgCxe0a8o8NWyVjWwrrLXw=="
+  "resolved" "https://registry.npmjs.org/babel-plugin-inline-dotenv/-/babel-plugin-inline-dotenv-1.6.0.tgz"
+  "version" "1.6.0"
+  dependencies:
+    "dotenv" "^8.2.0"
+
 "babel-plugin-istanbul@^6.0.0":
   "integrity" "sha512-AF55rZXpe7trmEylbaE1Gv54wn6rwU03aptvRoVIGP8YykoSxqdVLV1TfwflBCE/QtHmqtP8SWlTENqbK8GCSQ=="
   "resolved" "https://registry.npmjs.org/babel-plugin-istanbul/-/babel-plugin-istanbul-6.0.0.tgz"
@@ -3576,6 +3583,11 @@
   "version" "1.0.1"
   dependencies:
     "webidl-conversions" "^4.0.2"
+
+"dotenv@^8.2.0":
+  "integrity" "sha512-8sJ78ElpbDJBHNeBzUbUVLsqKdccaa/BXF1uPTw3GrvQTBgrQrtObr2mUrE38vzYd8cEv+m/JBfDLioYcfXoaw=="
+  "resolved" "https://registry.npmjs.org/dotenv/-/dotenv-8.2.0.tgz"
+  "version" "8.2.0"
 
 "ecc-jsbn@~0.1.1":
   "integrity" "sha1-OoOpBOVDUyh4dMVkt1SThoSamMk="
