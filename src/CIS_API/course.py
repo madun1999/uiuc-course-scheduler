@@ -128,3 +128,4 @@ if __name__ == "__main__":
     print(course_parser('CS/233'))
     print(course_parser('CS/3'))
     print(course_parser('CS/233', 'as/a'))
+    add_course_to_db('CS/242')
