@@ -16,6 +16,16 @@ export default {
               TabTwoScreen: 'two',
             },
           },
+          Login: {
+            screens: {
+              LoginScreen: 'login',
+            },
+          },
+          Profile: {
+            screens: {
+              ProfileScreen: 'profile',
+            },
+          },
         },
       },
       NotFound: '*',

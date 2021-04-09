@@ -18,3 +18,11 @@ export type TabTwoParamList = {
   TabTwoScreen: undefined;
 };
 
+export type LoginParamList = {
+  LoginScreen: undefined;
+};
+
+export type ProfileParamList = {
+  ProfileScreen: undefined;
+};
+
