@@ -1,7 +1,7 @@
 import requests
 from xml.etree import ElementTree
 from CIS_API.subject_list import fetch_subjects_from_CIS
-from db.db_handler import post_subject_courses
+from db.db_CIS_API_handler import post_subject_courses
 
 
 def fetch_subject_courses_from_CIS(subject_id, year_semester='2021/fall/'):

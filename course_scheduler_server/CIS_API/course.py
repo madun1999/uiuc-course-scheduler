@@ -3,7 +3,7 @@ from xml.etree import ElementTree
 from CIS_API.section import Section
 from CIS_API.meeting import Meeting
 from CIS_API.instructor import Instructor
-from db.db_handler import post_course
+from db.db_CIS_API_handler import post_course
 
 
 class Course:
