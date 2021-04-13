@@ -3,7 +3,7 @@ from xml.etree import ElementTree
 from db.db_handler import post_subject
 
 
-def subject_parser(year_semester='2021/fall'):
+def fetch_subjects_from_CIS(year_semester='2021/fall'):
     """
     Parse all subjects given year-semester
     :param year_semester: year-semester, i.e, '2021/fall'
@@ -30,10 +30,12 @@ def add_subjects_to_db(year_semester='2021/fall'):
     Add the list of parsed subjects into database
     :param year_semester: year-semester, i.e, '2021/fall'
     """
-    subjects = subject_parser(year_semester)
+    subjects = fetch_subjects_from_CIS(year_semester)
     if subjects is not False:
         for subject in subjects:
             post_subject(subject)
+    else:
+        return False
 
 
 if __name__ == "__main__":
@@ -41,5 +43,5 @@ if __name__ == "__main__":
     for testing and demo 
     """
     add_subjects_to_db()
-    subject_parser('20/fa')
-    print(subject_parser())
+    fetch_subjects_from_CIS('20/fa')
+    print(fetch_subjects_from_CIS())

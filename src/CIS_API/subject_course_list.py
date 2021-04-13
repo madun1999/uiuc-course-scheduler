@@ -1,10 +1,10 @@
 import requests
 from xml.etree import ElementTree
-from CIS_API.subject_list import subject_parser
+from CIS_API.subject_list import fetch_subjects_from_CIS
 from db.db_handler import post_subject_courses
 
 
-def subject_courses_parser(subject_id, year_semester='2021/fall/'):
+def fetch_subject_courses_from_CIS(subject_id, year_semester='2021/fall/'):
     """
     Parse the list of courses given subject id and year-semester
     :param subject_id: subject id, i.e., 'CS/242'
@@ -33,9 +33,11 @@ def add_subject_courses_to_db(subject_id, year_semester='2021/fall/'):
     :param subject_id: subject_id: subject id, i.e., 'CS/242'
     :param year_semester: year-semester, i.e, '2021/fall/'
     """
-    parsed_courses = subject_courses_parser(subject_id, year_semester)
+    parsed_courses = fetch_subject_courses_from_CIS(subject_id, year_semester)
     if parsed_courses is not False:
         post_subject_courses(parsed_courses)
+    else:
+        return False
 
 
 def add_all_subject_courses_to_db(year_semester='2021/fall/'):
@@ -44,16 +46,18 @@ def add_all_subject_courses_to_db(year_semester='2021/fall/'):
     :param year_semester: year-semester, i.e, '2021/fall/'
     :return: all parsed list of courses
     """
-    subjects = subject_parser(year_semester[:-1])
+    subjects = fetch_subjects_from_CIS(year_semester[:-1])
     if subjects is not False:
         courses = []
         for subject in subjects:
             subject_id = subject['subject_id']
-            parsed_courses = subject_courses_parser(subject_id, year_semester)
+            parsed_courses = fetch_subject_courses_from_CIS(subject_id, year_semester)
             if parsed_courses is not False:
                 post_subject_courses(parsed_courses)
                 courses.append(parsed_courses)
         return courses
+    else:
+        return False
 
 
 if __name__ == "__main__":
@@ -61,6 +65,6 @@ if __name__ == "__main__":
     for testing and demo 
     """
     add_all_subject_courses_to_db()
-    print(subject_courses_parser('AAS', 'f/2'))
-    print(subject_courses_parser('as'))
-    print(subject_courses_parser('AAS'))
+    print(fetch_subject_courses_from_CIS('AAS', 'f/2'))
+    print(fetch_subject_courses_from_CIS('as'))
+    print(fetch_subject_courses_from_CIS('AAS'))

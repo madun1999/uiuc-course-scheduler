@@ -1,5 +1,5 @@
 from unittest import TestCase
-from CIS_API.course import Course, course_parser
+from CIS_API.course import Course, fetch_course_from_CIS
 
 
 class TestCourse(TestCase):
@@ -16,21 +16,21 @@ class TestCourse(TestCase):
         """
         Test parse a course given invalid semester-year
         """
-        parsed_course = course_parser('CS/233', '20/fa')
+        parsed_course = fetch_course_from_CIS('CS/233', '20/fa')
         assert parsed_course is False
 
     def test_invalid_course_id(self):
         """
         Test parse a course given valid semester-year but invalid course id
         """
-        parsed_course = course_parser('CS/2', '2021/fall/')
+        parsed_course = fetch_course_from_CIS('CS/2', '2021/fall/')
         assert parsed_course is False
 
     def test_course_parser(self):
         """
         Test parse a course given valid semester-year and course id
         """
-        parsed_course = course_parser('CS/242', '2018/fall/')
+        parsed_course = fetch_course_from_CIS('CS/242', '2018/fall/')
         assert parsed_course['course_id'] == 'CS 242'
         assert parsed_course['title'] == 'Programming Studio'
         assert parsed_course['credit_hours'] == '3 hours.'
