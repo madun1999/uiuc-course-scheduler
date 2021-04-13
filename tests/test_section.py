@@ -1,5 +1,5 @@
 from unittest import TestCase
-from CIS_API.section import Section
+from course_scheduler_server.CIS_API.section import Section
 
 
 class TestSection(TestCase):
@@ -7,7 +7,7 @@ class TestSection(TestCase):
         """
         Test Section structure and section_to_dict
         """
-        section = Section('1', 1, 1, 1, 1, 1, 1, 1)
+        section = Section('1', 1, 1, 1, 1, 1, 1, 1, 1)
         section_dict = section.section_to_dict()
         assert section_dict['section_id'] == 1
         assert section_dict['end_date'] == 1

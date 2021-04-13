@@ -1,4 +1,7 @@
 class Meeting:
+    """
+    Meeting structure
+    """
     def __init__(self,
                  meeting_type,
                  start,

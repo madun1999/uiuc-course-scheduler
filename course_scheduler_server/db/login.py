@@ -2,12 +2,14 @@
 A module for communication with the mongo database for user information.
 """
 
-from db.db_helper import delete_one, find, has_key, replace_one_with_key, set_fields
-from models.user import User
+from course_scheduler_server.db.db_helper import delete_one, find, has_key, replace_one_with_key, set_fields
+from course_scheduler_server.models.user import User
+
 
 def user_exist(user : User) -> bool:
     """Return if the user exists in the database."""
     return has_key("user", user.id)
+
 
 def sign_up(user : User) -> bool:
     """Sign a user up in database"""
@@ -17,6 +19,7 @@ def sign_up(user : User) -> bool:
     else:
         return False
 
+
 def deactivate(user : User) -> bool:
     """Remove a user in database"""
     if has_key("user", user.id):
@@ -25,6 +28,7 @@ def deactivate(user : User) -> bool:
     else:
         return False
 
+
 def set_user(user: User) -> bool:
     """Set a user's info in database"""
     if not has_key("user", user.id):
@@ -32,6 +36,7 @@ def set_user(user: User) -> bool:
     else:
         set_fields("user", user.id, user.to_db_dict())
         return True
+
 
 def get_user(user: User) -> dict:
     """Get all user info from database"""

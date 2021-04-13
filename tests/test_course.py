@@ -1,5 +1,5 @@
 from unittest import TestCase
-from CIS_API.course import Course, fetch_course_from_CIS
+from course_scheduler_server.CIS_API.course import Course, fetch_course_from_CIS
 
 
 class TestCourse(TestCase):

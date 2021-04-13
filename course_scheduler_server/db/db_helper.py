@@ -11,6 +11,7 @@ from os import getenv
 load_dotenv()
 print(getenv("MONGODB_CONNECT"))
 
+
 def find(collection, query=None):
     """
     Wrapper around collection.find. Return list of items get.

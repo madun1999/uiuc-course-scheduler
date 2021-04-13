@@ -5,6 +5,7 @@ class Section:
     def __init__(self,
                  section_id,
                  section_number,
+                 section_title,
                  section_text,
                  part_of_term,
                  enrollment_status,
@@ -16,6 +17,7 @@ class Section:
         Initialization
         :param section_id: section id (CRN)
         :param section_number: section number
+        :param section_title: section title
         :param section_text: section info
         :param part_of_term: part of term (1, A, B, S1, S2, S2A, S2B, SF)
         :param enrollment_status: enrollment status
@@ -25,6 +27,7 @@ class Section:
         """
         self.section_id = int(section_id)
         self.section_number = section_number
+        self.section_title = section_title
         self.section_text = section_text
         self.part_of_term = part_of_term
         self.enrollment_status = enrollment_status
