@@ -1,13 +1,24 @@
+/** Login Screen */
 import * as React from 'react';
 import { StyleSheet, Button } from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
 import * as Google from 'expo-auth-session/providers/google';
 import { Text, View } from '../components/Themed';
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import {BottomTabParamList} from "../types";
+import {BottomTabNavigationProp} from "@react-navigation/bottom-tabs";
 
+// screen parameter type
+type LoginScreenNavigationProp = BottomTabNavigationProp<BottomTabParamList, 'Login'>;
+type LoginScreenProps = {
+  navigation: LoginScreenNavigationProp,
+};
+
+// Return to this page when login web browser is closed
 WebBrowser.maybeCompleteAuthSession();
 
-export default function LoginScreen({ navigation }) {
+export default function LoginScreen({ navigation } : LoginScreenProps) {
+  // Google login
   const [request, response, promptAsync] = Google.useAuthRequest({
     responseType: "id_token",
     expoClientId: process.env.GOOGLE_APP_CLIENT_ID,
@@ -19,9 +30,7 @@ export default function LoginScreen({ navigation }) {
     if (response?.type === 'success') {
       const { params } = response;
       const accessToken = params?.id_token;
-      console.log(response)
-      console.log("google signed in: " + accessToken)
-      AsyncStorage.setItem('googleAuthToken', accessToken === undefined ? "" : accessToken).then(() => {console.log(accessToken); navigation.navigate("Profile")});
+      AsyncStorage.setItem('googleAuthToken', accessToken === undefined ? "" : accessToken).then(() => {navigation.navigate("ProfileScreen")});
     }
   }, [response])
   

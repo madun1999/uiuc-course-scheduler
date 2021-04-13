@@ -27,13 +27,13 @@ export default function BottomTabNavigator() {
           tabBarIcon: ({ color }) => <TabBarIcon name="ios-code" color={color} />,
         }}
       />
-      <BottomTab.Screen
-        name="Login"
-        component={LoginNavigator}
-        options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="ios-code" color={color} />,
-        }}
-      />
+      {/*<BottomTab.Screen*/}
+      {/*  name="Login"*/}
+      {/*  component={LoginNavigator}*/}
+      {/*  options={{*/}
+      {/*    tabBarIcon: ({ color }) => <TabBarIcon name="ios-code" color={color} />,*/}
+      {/*  }}*/}
+      {/*/>*/}
       <BottomTab.Screen
         name="Profile"
         component={ProfileNavigator}
@@ -74,27 +74,32 @@ function TabOneNavigator() {
   );
 }
 
-const LoginStack = createStackNavigator<LoginParamList>();
-function LoginNavigator() {
-  return (
-    <LoginStack.Navigator>
-      <LoginStack.Screen
-        name="LoginScreen"
-        component={LoginScreen}
-        options={{ headerTitle: 'Login' }}
-      />
-    </LoginStack.Navigator>
-  );
-}
+// const LoginStack = createStackNavigator<LoginParamList>();
+// function LoginNavigator() {
+//   return (
+//     <LoginStack.Navigator>
+//       <LoginStack.Screen
+//         name="LoginScreen"
+//         component={LoginScreen}
+//         options={{ headerTitle: 'Login' }}
+//       />
+//     </LoginStack.Navigator>
+//   );
+// }
 
 const ProfileStack = createStackNavigator<ProfileParamList>();
 function ProfileNavigator() {
   return (
-    <ProfileStack.Navigator>
+    <ProfileStack.Navigator initialRouteName="ProfileScreen">
       <ProfileStack.Screen
         name="ProfileScreen"
         component={ProfileScreen}
         options={{ headerTitle: 'Profile' }}
+      />
+      <ProfileStack.Screen
+        name="LoginScreen"
+        component={LoginScreen}
+        options={{ headerTitle: 'Login' }}
       />
     </ProfileStack.Navigator>
   );

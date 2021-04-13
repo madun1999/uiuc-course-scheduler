@@ -4,21 +4,37 @@ import { ActivityIndicator } from 'react-native-paper';
 import EditScreenInfo from '../components/EditScreenInfo';
 import { Text, View } from '../components/Themed';
 import UserProfile from '../api/UserProfile';
-import { getUserProfile, logout } from '../api/query';
+import { getUserProfile } from '../api/query';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useIsFocused } from "@react-navigation/native";
+import {BottomTabNavigationProp} from "@react-navigation/bottom-tabs";
+import {BottomTabParamList} from "../types";
 
-export default function ProfileScreen({ navigation }) {
-  const [user, setUser] = React.useState<UserProfile | null>(null)
-  const [error, setError] = React.useState<string | null>(null)
-  const isFocused = useIsFocused();
+// screen parameter type
+type ProfileScreenNavigationProp = BottomTabNavigationProp<BottomTabParamList, 'Login'>;
+type ProfileScreenProps = {
+  navigation: ProfileScreenNavigationProp,
+};
+
+export default function ProfileScreen({ navigation } : ProfileScreenProps) {
+  const [user, setUser] = React.useState<UserProfile | null>(null) // user to be displayed
+  const [error, setError] = React.useState<string | null>(null) // error to be displayed
+  const [loggedIn, setLoggedIn] = React.useState<boolean>(false) // error to be displayed
 
   React.useEffect(() => {
     AsyncStorage.getItem('googleAuthToken').then((token) => 
-      {console.log("profile screen: " + token); getUserProfile(token === null ? '' : token).then(setUser).catch((e : Error) => setError(e.message))}
+      {
+        if (token === null) {
+          setLoggedIn(false);
+        } else {
+          setLoggedIn(true);
+          getUserProfile(token).then(setUser).catch((e : Error) => setError(e.message));
+        }
+      }
     );
-  }, []);
+  }, [navigation]);
 
+  // There is an error
   if (error !== null) {
     return (
       <View style={styles.container}>
@@ -28,6 +44,19 @@ export default function ProfileScreen({ navigation }) {
     );
   }
 
+  // not logged in
+  if (!loggedIn) {
+     return (
+      <View style={styles.container}>
+        <Button
+          title="Log in"
+          onPress={() => {navigation.push("LoginScreen")}}
+        />
+      </View>
+    );
+  }
+
+  // User is loading
   if (user === null) {
     return (
       <View style={styles.container}>
@@ -36,12 +65,13 @@ export default function ProfileScreen({ navigation }) {
     );
   }
 
+  // User is loaded
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Email: {user.email}</Text>
       <Button
         title="Logout" 
-        onPress={() => {AsyncStorage.removeItem('googleAuthToken'); navigation.navigate("Login")}}
+        onPress={() => {AsyncStorage.removeItem('googleAuthToken').then(() => setLoggedIn(false))}}
       /> 
     </View>
   );

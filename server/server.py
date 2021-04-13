@@ -14,6 +14,8 @@ from models.user import User
 app = Flask(__name__)
 # CORS
 CORS(app)
+STATUS_OK = 200
+STATUS_BAD_REQUEST = 400
 
 CLIENT_IDS = [
     "399183208162-br9tdb9ob4figvn6jr3cds1s60lgpook.apps.googleusercontent.com",
@@ -23,7 +25,7 @@ CLIENT_IDS = [
 def wrap_response(result):
     """create response, abort if error"""
     code, response = result
-    if code != 200:
+    if code != STATUS_OK:
         return response, code
     else:
         return response
@@ -52,14 +54,14 @@ def login_user():
     try:
         user = check_google_token()
         if user_exist(user):
-            return wrap_response((200, "Logged in"))
+            return wrap_response((STATUS_OK, "Logged in"))
         else:
             sign_up(user)
-            return wrap_response((200, "Signed up"))
+            return wrap_response((STATUS_OK, "Signed up"))
     except ValueError as error:
-        return wrap_response((400, str(error)))
+        return wrap_response((STATUS_BAD_REQUEST, str(error)))
     except PyMongoError as error:
-        return wrap_response((400, "Server database error: " + str(error)))
+        return wrap_response((STATUS_BAD_REQUEST, "Server database error: " + str(error)))
 
 # remove account
 @app.route('/api/deactivate', methods=["DELETE"])
@@ -68,13 +70,13 @@ def deactivate_user():
         user = check_google_token()
         if user_exist(user):
             deactivate(user)
-            return wrap_response((200, "Account deactivated"))
+            return wrap_response((STATUS_OK, "Account deactivated"))
         else:
-            return wrap_response((400, "You haven't signed up yet."))
+            return wrap_response((STATUS_BAD_REQUEST, "You haven't signed up yet."))
     except ValueError as error:
-        return wrap_response((400, str(error)))
+        return wrap_response((STATUS_BAD_REQUEST, str(error)))
     except PyMongoError as error:
-        return wrap_response((400, "Server database error: " + str(error)))
+        return wrap_response((STATUS_BAD_REQUEST, "Server database error: " + str(error)))
 
 # get user info
 @app.route('/api/user', methods=["GET"])
@@ -82,15 +84,15 @@ def get_user_profile():
     try:
         user = check_google_token()
         if not user_exist(user):
-            return wrap_response((200, "Invalid user. Try log in again"))
+            return wrap_response((STATUS_OK, "Invalid user. Try log in again"))
         else:
             user_info = get_user(user)
             user_info["id"] = user_info["_id"]
-            return wrap_response((200, dumps(user_info)))
+            return wrap_response((STATUS_OK, dumps(user_info)))
     except ValueError as error:
-        return wrap_response((400, str(error)))
+        return wrap_response((STATUS_BAD_REQUEST, str(error)))
     except PyMongoError as error:
-        return wrap_response((400, "Server database error: " + str(error)))
+        return wrap_response((STATUS_BAD_REQUEST, "Server database error: " + str(error)))
 
 
 if __name__ == '__main__':
