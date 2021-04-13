@@ -1,6 +1,9 @@
-/Untitled.ipynb
-/~$nual test plan .docx
-/.env
-/.idea
-/.ipynb_checkpoints
+Untitled.ipynb
+~$nual test plan .docx
+.env
+.idea/
+.ipynb_checkpoints/
 __pycache__/
+.vscode/
+.pytest_cache/
+
