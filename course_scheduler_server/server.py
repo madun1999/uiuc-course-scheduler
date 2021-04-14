@@ -1,12 +1,13 @@
 """API Server"""
 from json import dumps
+
+from google_auth.google_oauth import check_google_token
 from db.login import deactivate, get_user, sign_up, user_exist
-from flask import Flask, request
+from flask import Flask, request, abort, jsonify
 from flask_cors import CORS
 from pymongo.errors import PyMongoError
-from google.oauth2 import id_token
-from google.auth.transport import requests
-from models.user import User
+from graphql_api.graphql_api import graphql_page
+
 # the app
 app = Flask(__name__)
 # CORS
@@ -14,36 +15,11 @@ CORS(app)
 STATUS_OK = 200
 STATUS_BAD_REQUEST = 400
 
-CLIENT_IDS = [
-    "399183208162-br9tdb9ob4figvn6jr3cds1s60lgpook.apps.googleusercontent.com",
-    "399183208162-ms7dgnih1f63lfa4qhe89m6f3ou8d7t4.apps.googleusercontent.com"
-]
 
 def wrap_response(result):
     """create response, abort if error"""
-    code, response = result
-    if code != STATUS_OK:
-        return response, code
-    else:
-        return response
+    return result[1], result[0]
 
-def check_google_token() -> User:
-    """Check if the current google token is valid. Return User object if valid. """
-    # get token
-    auth = request.headers.get("Authorization")
-    if not auth:
-    	raise ValueError('Invalid Authorization.')
-    bearer = auth.split() 
-    if bearer[0] != "Bearer":
-        raise ValueError('Invalid token type.')
-    token = bearer[1]
-    # check token
-    id_info = id_token.verify_oauth2_token(token, requests.Request())
-    if id_info["aud"] not in CLIENT_IDS:
-        raise ValueError('Could not verify audience.')
-    user_id = id_info['sub']
-    user_email = id_info['email']
-    return User(user_id, user_email)
 
 # login
 @app.route('/api/login', methods=["POST"])
@@ -51,14 +27,15 @@ def login_user():
     try:
         user = check_google_token()
         if user_exist(user):
-            return wrap_response((STATUS_OK, "Logged in"))
+            return "Logged in", STATUS_OK
         else:
             sign_up(user)
-            return wrap_response((STATUS_OK, "Signed up"))
+            return "Signed up", STATUS_OK
     except ValueError as error:
-        return wrap_response((STATUS_BAD_REQUEST, str(error)))
+        return str(error), STATUS_BAD_REQUEST
     except PyMongoError as error:
-        return wrap_response((STATUS_BAD_REQUEST, "Server database error: " + str(error)))
+        return "Server database error: " + str(error), STATUS_BAD_REQUEST
+
 
 # remove account
 @app.route('/api/deactivate', methods=["DELETE"])
@@ -67,13 +44,14 @@ def deactivate_user():
         user = check_google_token()
         if user_exist(user):
             deactivate(user)
-            return wrap_response((STATUS_OK, "Account deactivated"))
+            return "Account deactivated", STATUS_OK
         else:
-            return wrap_response((STATUS_BAD_REQUEST, "You haven't signed up yet."))
+            return "You haven't signed up yet.", STATUS_BAD_REQUEST
     except ValueError as error:
-        return wrap_response((STATUS_BAD_REQUEST, str(error)))
+        return str(error), STATUS_BAD_REQUEST
     except PyMongoError as error:
-        return wrap_response((STATUS_BAD_REQUEST, "Server database error: " + str(error)))
+        return "Server database error: " + str(error), STATUS_BAD_REQUEST
+
 
 # get user info
 @app.route('/api/user', methods=["GET"])
@@ -85,12 +63,15 @@ def get_user_profile():
         else:
             user_info = get_user(user)
             user_info["id"] = user_info["_id"]
-            return wrap_response((STATUS_OK, dumps(user_info)))
+            return dumps(user_info), STATUS_OK
     except ValueError as error:
-        return wrap_response((STATUS_BAD_REQUEST, str(error)))
+        return str(error), STATUS_BAD_REQUEST
     except PyMongoError as error:
-        return wrap_response((STATUS_BAD_REQUEST, "Server database error: " + str(error)))
+        return "Server database error: " + str(error), STATUS_BAD_REQUEST
 
+
+# graphql endpoints
+app.register_blueprint(graphql_page)
 
 if __name__ == '__main__':
     app.run()
