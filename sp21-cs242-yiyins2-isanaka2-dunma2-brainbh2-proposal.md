@@ -201,8 +201,8 @@ Dun Ma:
 Yiyin Shen: 
 | Category | Total Score Allocated | Detailed Rubrics |
 | --- | --- | --- |
-| GPA Data Cleaning | 5 | +1 convert GPA data into propitiate format <br> +2 store GPA to corresponding course information <br> +2 for error handling (missing/wrong GPA, instructor, etc.) |
-| Static Home Screen | 4 | +1 add course form & course list <br> +1 generate schedule button & schedule list <br> +1 restriction input forms <br> +1 importance factors' sliders |
+| GPA Data Cleaning | 5 | +3 convert GPA data into propitiate format <br> +2 store GPA to database <br> |
+| Static Home Screen | 5 | +1 add course form & course list <br> +1 generate schedule button & schedule list <br> +1 restriction input forms <br> +1 add breaks form + breaks list  <br> +1 importance factors' sliders |
 | Static Course information Screen | 3 | +1 general course information <br> +1 section information <br> +1 GPA and Rate My Professor information |
 | Static Schedule Screen | 3 | +1 calendar <br> +2 add courses | 
 | Unit Test | 5 | +0.5 per unit test |
