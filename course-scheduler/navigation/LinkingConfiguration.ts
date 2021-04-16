@@ -6,19 +6,39 @@ export default {
     screens: {
       Root: {
         screens: {
-          TabOne: {
+          Scheduler: {
             screens: {
-              TabOneScreen: 'one',
+              SchedulerScreen: 'scheduler',
             },
           },
-          TabTwo: {
+          Courses: {
             screens: {
-              TabTwoScreen: 'two',
+              CoursesScreen: 'courses',
+            },
+          },
+          Restrictions: {
+            screens: {
+              RestrictionsScreen: 'restrictions',
+            },
+          },
+          Factors: {
+            screens: {
+              FactorsScreen: 'factors',
             },
           },
           Login: {
             screens: {
               LoginScreen: 'login',
+            },
+          },
+          CourseInfo: {
+            screens: {
+              CourseInfoScreen: 'courseInfo',
+            },
+          },
+          ScheduleView: {
+            screens: {
+              ScheduleViewScreen: 'scheduleView', 
             },
           },
           Profile: {
