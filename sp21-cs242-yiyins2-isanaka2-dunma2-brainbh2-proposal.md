@@ -206,7 +206,7 @@ Yiyin Shen:
 | Static Course information Screen | 3 | +1 general course information <br> +1 section information <br> +1 GPA and Rate My Professor information |
 | Static Schedule Screen | 3 | +1 calendar <br> +2 add courses | 
 | Unit Test | 5 | +0.5 per unit test |
-| Manual Test Plan | 5 | +1 per screen (max 4) <br> +1 error handling view |
+| Manual Test Plan | 5 | +1 per screen (max 5) |
 
 ### Week 3: 
 Dun Ma: 
