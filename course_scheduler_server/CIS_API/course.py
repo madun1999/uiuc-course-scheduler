@@ -4,7 +4,6 @@ from xml.etree import ElementTree
 from course_scheduler_server.CIS_API.section import Section
 from course_scheduler_server.CIS_API.meeting import Meeting
 from course_scheduler_server.CIS_API.instructor import Instructor
-from course_scheduler_server.db.db_CIS_API_handler import post_course
 
 
 class Course:
