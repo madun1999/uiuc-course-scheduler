@@ -1,8 +1,8 @@
 import dotenv
 import requests
 from xml.etree import ElementTree
-from CIS_API.subject_list import fetch_subjects_from_CIS
-from db.db_CIS_API_handler import post_subject_courses
+from course_scheduler_server.CIS_API.subject_list import fetch_subjects_from_CIS
+from course_scheduler_server.db.db_CIS_API_handler import post_subject_courses
 import ariadne
 
 

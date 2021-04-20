@@ -1,6 +1,6 @@
 import pymongo
-from db.login import deactivate, get_user, sign_up, user_exist
-from models.user import User
+from course_scheduler_server.db.login import deactivate, get_user, sign_up, user_exist
+from course_scheduler_server.models.user import User
 from os import getenv
 from dotenv import load_dotenv
 

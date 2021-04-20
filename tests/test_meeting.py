@@ -1,5 +1,5 @@
 from unittest import TestCase
-from CIS_API.meeting import Meeting
+from course_scheduler_server.CIS_API.meeting import Meeting
 
 
 class TestMeeting(TestCase):

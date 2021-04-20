@@ -24,6 +24,7 @@ def find_one(collection, query=None):
     return item
 
 
+
 def find(collection, query=None):
     """
     Wrapper around collection.find. Return list of items get.

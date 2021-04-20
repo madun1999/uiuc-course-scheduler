@@ -3,6 +3,9 @@ from CIS_API.instructor import Instructor
 
 
 class Meeting:
+    """
+    Meeting structure
+    """
 
     meeting_type: str
     start: str

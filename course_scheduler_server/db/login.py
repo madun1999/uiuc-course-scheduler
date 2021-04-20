@@ -2,8 +2,9 @@
 A module for communication with the mongo database for user information.
 """
 
-from db.db_helper import delete_one, find, has_key, replace_one_with_key, set_fields, find_one
-from models.user import User
+from course_scheduler_server.db.db_helper import delete_one, find, has_key, replace_one_with_key, set_fields, find_one
+from course_scheduler_server.models.user import User
+
 
 
 def user_exist(user: User) -> bool:

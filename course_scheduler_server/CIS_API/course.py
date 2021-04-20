@@ -1,9 +1,10 @@
 import requests
 from typing import List
 from xml.etree import ElementTree
-from CIS_API.section import Section
-from CIS_API.meeting import Meeting
-from CIS_API.instructor import Instructor
+from course_scheduler_server.CIS_API.section import Section
+from course_scheduler_server.CIS_API.meeting import Meeting
+from course_scheduler_server.CIS_API.instructor import Instructor
+from course_scheduler_server.db.db_CIS_API_handler import post_course
 
 
 class Course:
@@ -104,6 +105,7 @@ def section_parser(course_root):
         current_section = Section(
             section.attrib['id'],
             section.find('sectionNumber').text,
+            feature_check_exist_and_return(section, 'sectionTitle'),
             feature_check_exist_and_return(section, 'sectionText'),
             section.find('partOfTerm').text,
             section.find('enrollmentStatus').text,

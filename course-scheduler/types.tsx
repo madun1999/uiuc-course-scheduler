@@ -4,18 +4,35 @@ export type RootStackParamList = {
 };
 
 export type BottomTabParamList = {
-  TabOne: undefined;
-  TabTwo: undefined;
+  Scheduler: undefined;
   Login: undefined;
   Profile: undefined;
 };
 
-export type TabOneParamList = {
-  TabOneScreen: undefined;
+export type SchedulerParamList = {
+  SchedulerScreen: undefined;
+  ScheduleViewScreen: undefined; 
 };
 
-export type TabTwoParamList = {
-  TabTwoScreen: undefined;
+export type ScheduleViewParamList = {
+  ScheduleViewScreen: undefined; 
+}
+
+export type CoursesParamList = {
+  CoursesScreen: undefined;
+  CourseInfoScreen: undefined; 
+};
+
+export type CourseInfoParamList = {
+  CourseInfoScreen: undefined; 
+}
+
+export type RestrictionsParamList = {
+  RestrictionsScreen: undefined;
+};
+
+export type FactorsParamList = {
+  FactorsScreen: undefined;
 };
 
 export type LoginParamList = {
