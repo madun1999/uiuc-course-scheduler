@@ -98,7 +98,7 @@ def test_fit_course_empty():
     assert not scheduler.fit_course_in_schedules([set(SCHEDULE_A_LIST)], COURSE_A, SECTION_DICT)
 
 def test_fit_course_nonempty():
-    assert scheduler.fit_course_in_schedules([set()], COURSE_A, SECTION_DICT) == [{"10086"}]
+    assert scheduler.fit_course_in_schedules([set()], COURSE_A, SECTION_DICT) == [{"10086"}, {'12580'}]
 
 def test_schedule_course_empty():
     actual_schedules, error_string = scheduler.schedule_courses([COURSE_A, COURSE_B])
