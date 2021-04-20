@@ -1,15 +1,21 @@
 import requests
+from typing import List
 from xml.etree import ElementTree
 from CIS_API.section import Section
 from CIS_API.meeting import Meeting
 from CIS_API.instructor import Instructor
-from db.db_CIS_API_handler import post_course
 
 
 class Course:
     """
     Course structure
     """
+    course_id: str
+    title: str
+    description: str
+    credit_hours: str
+    sections: List[Section]
+
     def __init__(self, course_id, title, description, credit_hours, sections):
         """
         Initialization
@@ -131,25 +137,13 @@ def fetch_course_from_CIS(course_id, year_semester='2021/fall/'):
     return course.course_to_dict()
 
 
-def add_course_to_db(course_id, year_semester='2021/fall/'):
-    """
-    :param course_id: course id, i.e. 'CS/233'
-    :param year_semester: year semester, i.e. '2021/fall/'
-    :return: add the parsed course into database
-    """
-    parsed_course = fetch_course_from_CIS(course_id, year_semester)
-    if parsed_course is not False:
-        post_course(parsed_course)
-    else:
-        return False
+
 
 
 if __name__ == "__main__":
     """
     for testing and demo  
     """
-    add_course_to_db('CS/233')
     print(fetch_course_from_CIS('CS/233'))
     print(fetch_course_from_CIS('CS/3'))
     print(fetch_course_from_CIS('CS/233', 'as/a'))
-    add_course_to_db('CS/242')

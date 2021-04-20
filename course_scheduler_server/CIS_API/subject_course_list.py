@@ -1,7 +1,10 @@
+import dotenv
 import requests
 from xml.etree import ElementTree
 from CIS_API.subject_list import fetch_subjects_from_CIS
 from db.db_CIS_API_handler import post_subject_courses
+import ariadne
+
 
 
 def fetch_subject_courses_from_CIS(subject_id, year_semester='2021/fall/'):
@@ -19,7 +22,10 @@ def fetch_subject_courses_from_CIS(subject_id, year_semester='2021/fall/'):
     courses_root = ElementTree.fromstring(courses_response.content)
     courses = []
     for course in courses_root.find('courses'):
-        courses.append({course.attrib['id']: course.text})
+        courses.append({
+            'course_num': course.attrib['id'],
+            'title': course.text
+        })
     subject_courses = {
         'subject_id': subject_id,
         'courses': courses

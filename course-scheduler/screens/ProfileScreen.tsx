@@ -27,6 +27,7 @@ export default function ProfileScreen({ navigation } : ProfileScreenProps) {
         if (token === null) {
           setLoggedIn(false);
         } else {
+          console.log(token)
           setLoggedIn(true);
           getUserProfile(token).then(setUser).catch((e : Error) => setError(e.message));
         }
@@ -34,20 +35,24 @@ export default function ProfileScreen({ navigation } : ProfileScreenProps) {
     );
   }, [navigation]);
 
+  // not logged in
+  if (!loggedIn) {
+     return (
+      <View style={styles.container}>
+        <Button
+          title="Log in"
+          onPress={() => {navigation.push("LoginScreen")}}
+        />
+      </View>
+    );
+  }
+
   // There is an error
   if (error !== null) {
     return (
       <View style={styles.container}>
         <Text style={styles.title}>{error}</Text>
         <Text style={styles.title}>Maybe you didn't log in.</Text>
-      </View>
-    );
-  }
-
-  // not logged in
-  if (!loggedIn) {
-     return (
-      <View style={styles.container}>
         <Button
           title="Log in"
           onPress={() => {navigation.push("LoginScreen")}}

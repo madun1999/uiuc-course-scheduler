@@ -1,4 +1,16 @@
+from CIS_API.meeting import Meeting
+from typing import Optional, List
+
+
 class Section:
+    section_id: int
+    section_number: str
+    section_text: Optional[str]
+    part_of_term: str
+    enrollment_status: str
+    start_date: Optional[str]
+    end_data: Optional[str]
+    meetings: List[Meeting]
     """
     Section structure
     """

@@ -9,7 +9,20 @@ from os import getenv
 
 # load environment variables
 load_dotenv()
-print(getenv("MONGODB_CONNECT"))
+
+
+def find_one(collection, query=None):
+    """
+        Wrapper around collection.find_one. Return item get or None.
+        Leave query = None to get all items in the collections.
+    """
+    mongo_client = pymongo.MongoClient(getenv("MONGODB_CONNECT"))
+    mongo_db = mongo_client[getenv("MONGODB_DB")]
+    if query is None:
+        query = dict()
+    item = mongo_db[collection].find_one(query)
+    return item
+
 
 def find(collection, query=None):
     """

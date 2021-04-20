@@ -1,4 +1,17 @@
+from typing import Optional, List
+from CIS_API.instructor import Instructor
+
+
 class Meeting:
+
+    meeting_type: str
+    start: str
+    end: Optional[str]
+    days_of_the_week: Optional[str]
+    building_name: Optional[str]
+    room_number: Optional[str]
+    instructors: List[Instructor]
+
     def __init__(self,
                  meeting_type,
                  start,

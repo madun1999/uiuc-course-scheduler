@@ -1,0 +1,87 @@
+type Course {
+    subjectId: String!
+    courseNum: String!
+    courseDetail: CourseDetail
+}
+
+type CourseDetail {
+    title: String
+    description: String
+    credit_hours: String
+    sections: [Section!]
+}
+
+type Meeting {
+    meetingType: String!
+    start: String!
+    end: String
+    daysOfTheWeek: String
+    buildingName: String
+    roomNumber: String
+    instructors: [Instructor!]!
+}
+type Section {
+    sectionId: Int!         # CRN
+    sectionNumber: String!
+    sectionTitle: String
+    sectionText: String
+    partOfTerm: String!
+    enrollmentStatus: String!
+    startDate: String
+    EndDate: String
+    meetings: [Meeting!]!
+}
+type Instructor {
+    firstName: String!
+    lastName: String!
+}
+type User {
+    id: String!
+    email: String
+    name: String
+    picture: String
+}
+
+type Schedule {
+    sections: [Section!]!
+}
+
+type ScheduleResult {
+    success: Boolean!
+    errors: [String]
+    schedules: [Schedule!]  # null if error
+}
+
+type StarResult {
+    success: Boolean!
+    errors: [String]
+}
+
+type Subject {
+    subjectId: String!     # short name
+    name: String!   # full name
+}
+
+type SubjectsResult {
+    success: Boolean!
+    error: String
+    result: [Subject!]
+}
+
+type UpdateUserResult {
+    success: Boolean!
+    error: String
+}
+
+type Query {
+    subjects: SubjectsResult!
+    courses(subject: String!): [Course!]           # null if error
+    course(courseId: String!): Course!          # null if error
+    user: User                                    # Only current user, null if error
+    schedule(courses: [String!]!): ScheduleResult! # Strings are sectionIds
+}
+
+type Mutation {
+    starSchedule(sections: [String!]!): StarResult!
+    updateUser: UpdateUserResult!
+}
