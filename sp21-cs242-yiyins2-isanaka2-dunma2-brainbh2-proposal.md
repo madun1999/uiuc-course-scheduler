@@ -144,23 +144,19 @@ Yiyin Shen:
   
 ### Week 4: 
 Dun Ma: 
-- Create a Selenium scrapper (We chose Selenium since Rate My Professor updates dynamically.) 
-- Scrape the following information from Rate My Professor:
-  - For each course: 
-    - Professor's rating 
-    - Course difficulty
-    - Will-take-again rate 
-    - Popular comments 
-    - Number of ratings/comments 
-- Store the above information into MongoDB 
+- Finish scoring algorithm
+- Identify linked course information for courses.
+- Consider linked course while scheduling.
 
 
 Yiyin Shen:
-- Update the algorithm to generate schedules based on more restrictions from rate my professor information
-  - Establish connection between courses and professors.
-- Score schedules based on importance factors from rate my professor information
-- API
-  - Update "schedule" query endpoint with new restrictions and scores
+- Add GPA information to sections in database
+- Make the following screens functional: 
+  - Restriction Screen
+  - Factor importance screen
+  - Schedule Screen
+  - Profile Screen 
+    - Display saved schedules 
 
 ## Rubrics
 ---
