@@ -9,7 +9,7 @@ class User(TypedDict):
     stared_schedule_ids: List[List[int]]
 
 
-def make_user(*_, uid: str, email: Optional[str], name: Optional[str], picture: Optional[str]) -> User:
+def make_user(*_, uid: str, email: Optional[str] = None, name: Optional[str] = None, picture: Optional[str] = None) -> User:
     return User(
         id=uid,
         email=email,

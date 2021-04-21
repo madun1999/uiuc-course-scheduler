@@ -1,4 +1,3 @@
-from meeting import Meeting
 from typing import Optional, List, TypedDict
 
 

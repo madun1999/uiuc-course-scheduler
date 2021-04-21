@@ -37,12 +37,12 @@ SECTION_B = {
 }
 SECTION_C = {
     "section_id": "10001",
-    "part_of_term": "1",
+    "part_of_term": "A",
     "meetings": [MEETING_C]
 }
 SECTION_C2 = {
     "section_id": "10001",
-    "part_of_term": "A",
+    "part_of_term": "B",
     "meetings": [MEETING_C]
 }
 SECTION_A2 = {
@@ -155,7 +155,11 @@ def test_fit_course_empty():
 
 
 def test_fit_course_nonempty():
-    assert fit_course_in_schedules(set(), MANDATORY_COURSE_A) == [{"10086"}]
+    actual_schedules = fit_course_in_schedules({Schedule()}, MANDATORY_COURSE_A)
+    expected_schedule = [make_schedule([SECTION_A], [True]),
+                         make_schedule([SECTION_B], [True]),
+                         ]
+    assert_schedule_lists_same(actual_schedules, expected_schedule)
 
 
 def test_schedule_course_empty():
@@ -182,10 +186,11 @@ def test_schedule_with_max_courses():
     expected_schedule = [Schedule()]
     assert_schedule_lists_same(actual_schedules, expected_schedule)
 
+
 def test_schedule_with_min_mandatories():
     restriction_scheduler = RestrictionScheduler(10, 1, [])
-    actual_schedules, error_string = restriction_scheduler.schedule_courses([MANDATORY_COURSE_A, NOT_MANDATORY_COURSE_B])
+    actual_schedules, error_string = restriction_scheduler.schedule_courses(
+        [MANDATORY_COURSE_A, NOT_MANDATORY_COURSE_B])
     expected_schedule = [make_schedule([SECTION_A], [True]),
                          make_schedule([SECTION_B], [True])]
     assert_schedule_lists_same(actual_schedules, expected_schedule)
-

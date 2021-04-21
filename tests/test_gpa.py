@@ -1,9 +1,14 @@
+import os
+from pathlib import Path
 from unittest import TestCase
+import dotenv
 from course_scheduler_server.gpa import parse_course_gpas
+
+dotenv.load_dotenv()
 
 
 class Test(TestCase):
-    parsed_result = parse_course_gpas('../gpa-test.csv')
+    parsed_result = parse_course_gpas(str(Path(os.getenv('UCS_PROJECT_ROOT')) / 'gpa-test.csv'))
 
     def test_first_course(self):
         assert self.parsed_result[0]['course_id'] == 'AAS 100'

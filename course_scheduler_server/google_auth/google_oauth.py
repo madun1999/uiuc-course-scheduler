@@ -1,11 +1,16 @@
+import os
+
+from dotenv import load_dotenv
 from flask import request
 from google.oauth2 import id_token
 from google.auth.transport import requests
 from models.user import User, make_user
 
+load_dotenv()
+
 CLIENT_IDS = [
-    "399183208162-br9tdb9ob4figvn6jr3cds1s60lgpook.apps.googleusercontent.com",
-    "399183208162-ms7dgnih1f63lfa4qhe89m6f3ou8d7t4.apps.googleusercontent.com"
+    os.getenv('GOOGLE_APP_CLIENT_ID'),
+    os.getenv('GOOGLE_WEB_CLIENT_ID')
 ]
 
 

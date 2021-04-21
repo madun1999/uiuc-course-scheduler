@@ -7,6 +7,12 @@ class TestMeeting(TestCase):
         """
         Test Meeting structure and meeting_to_dict
         """
-        meeting = make_meeting(1, 1, 1, '  MW   ', 1, 1, 1)
+        meeting = make_meeting(meeting_type=1,
+                               start=1,
+                               end=1,
+                               days_of_the_week='  MW   ',
+                               building_name=1,
+                               room_number=1,
+                               instructors=1)
         assert meeting['meeting_type'] == 1
         assert meeting['days_of_the_week'] == 'MW'
