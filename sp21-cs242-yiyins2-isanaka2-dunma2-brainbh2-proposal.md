@@ -205,7 +205,7 @@ Yiyin Shen:
 | Static Home Screen | 5 | +1 add course form & course list <br> +1 generate schedule button & schedule list <br> +1 restriction input forms <br> +1 add breaks form & breaks list  <br> +1 importance factors' sliders |
 | Static Course information Screen | 3 | +1 general course information <br> +1 section information <br> +1 GPA and Rate My Professor information |
 | Static Schedule Screen | 3 | +1 calendar <br> +2 add courses | 
-| Unit Test | 5 | +0.5 per unit test |
+| Unit Test | 3 | +0.5 per unit test |
 | Manual Test Plan | 5 | +1 per screen (max 5) |
 
 ### Week 3: 
@@ -225,8 +225,8 @@ Yiyin Shen:
 | Update Course information Screen | 4 | +2 connected to backend <br> +1 handle loading <br> +1 handle error |
 | Update Schedule Screen | 4 | +2 add courses <br> +1 handle loading <br> +1 handle error | 
 | Update Profile Screen | 3 | +1 show all user information <br> +1 connect to backend <br> +1 handle error | 
-| Unit Test | 5 | +0.5 per unit test |
-| Manual Test Plan | 5 | +1 per screen (max 4) <br> +1 error handling view |
+| Unit Test | 3 | +0.5 per unit test |
+| Manual Test Plan | 7 | +1 per screen (max 5) <br> +2 error handling view |
 
 ### Week 4: 
 Dun Ma: 
