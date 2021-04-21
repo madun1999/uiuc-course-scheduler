@@ -2,7 +2,7 @@ from os import getenv
 from pymongo import MongoClient
 from dotenv import load_dotenv
 
-from CIS_API.course import fetch_course_from_CIS
+from CIS_API.fetch_course import fetch_course_from_CIS
 from db.db_helper import find, find_one
 
 load_dotenv()

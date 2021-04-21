@@ -1,5 +1,5 @@
 from unittest import TestCase
-from course_scheduler_server.CIS_API.instructor import Instructor
+from models.instructor import Instructor
 
 
 class TestInstructor(TestCase):
@@ -8,7 +8,6 @@ class TestInstructor(TestCase):
         """
         Test Instructor structure and instructor_to_dict
         """
-        instructor = Instructor('first', 'last')
-        instructor_dict = instructor.instructor_to_dict()
-        assert instructor_dict['first_name'] == 'first'
-        assert instructor_dict['last_name'] == 'last'
+        instructor = Instructor(first_name='first', last_name='last')
+        assert instructor['first_name'] == 'first'
+        assert instructor['last_name'] == 'last'

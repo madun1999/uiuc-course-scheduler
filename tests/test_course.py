@@ -1,5 +1,6 @@
 from unittest import TestCase
-from course_scheduler_server.CIS_API.course import Course, fetch_course_from_CIS
+from models.course import Course, make_course
+from CIS_API.fetch_course import fetch_course_from_CIS
 
 
 class TestCourse(TestCase):
@@ -7,10 +8,9 @@ class TestCourse(TestCase):
         """
         Test Course structure and course_to_dict
         """
-        course = Course(1, 'title', 1, 1, 1)
-        course_dict = course.course_to_dict()
-        assert course_dict['course_id'] == 1
-        assert course_dict['title'] == 'title'
+        course = make_course(course_id=1, title='title', credit_hours=1, description=1, sections=1)
+        assert course['course_id'] == 1
+        assert course['title'] == 'title'
 
     def test_invalid_semester_year(self):
         """

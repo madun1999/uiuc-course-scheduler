@@ -18,6 +18,7 @@ from werkzeug.exceptions import BadRequest
 
 from db.login import get_user, update_user
 from scheduler.scheduler import schedule_courses
+from scheduler.scheduler_restriction import schedule_courses_with_restrictions
 from google_auth.google_oauth import check_google_token
 
 dotenv.load_dotenv()

@@ -1,7 +1,7 @@
 from flask import request
 from google.oauth2 import id_token
 from google.auth.transport import requests
-from models.user import User
+from models.user import User, make_user
 
 CLIENT_IDS = [
     "399183208162-br9tdb9ob4figvn6jr3cds1s60lgpook.apps.googleusercontent.com",
@@ -35,4 +35,4 @@ def check_google_token() -> User:
     user_email = get_from_dict(id_info, 'email')
     user_name = get_from_dict(id_info, 'name')
     user_picture = get_from_dict(id_info, 'picture')
-    return User(user_id, user_email, user_name, user_picture)
+    return make_user(uid=user_id, email=user_email, name=user_name, picture=user_picture)
