@@ -129,6 +129,36 @@ def schedule_resolver(*_, courses):
     return result
 
 
+def schedule_with_restrictions_resolver(*_, courses):
+    """courses is a list of  {"courseId": str, "mandatory": bool}"""
+    course_details = []
+    for course_mand in courses:
+        course_id = course_mand["courseId"]
+        mandatory = course_mand["mandatory"]
+        subject = course_id.split()[0]
+        course_num = course_id.split()[1]
+        course_detail = database.get_course_detail(subject, course_num)
+        if not course_detail:
+            return {
+                "success": False,
+                "error": f"Course {course_id} does not exist."
+            }
+        course_details.append({"course": course_detail, "mandatory": mandatory})
+    schedules, error = schedule_courses_with_restrictions(course_details)
+    if error:
+        return {
+            "success": False,
+            "error": error
+        }
+    result = {
+        "success": True,
+        "schedules": [
+            {"sections": schedule} for schedule in schedules
+        ]
+    }
+    return result
+
+
 # set up schema
 query = QueryType()
 query.set_field("subjects", subjects_resolver)
@@ -136,6 +166,7 @@ query.set_field("courses", courses_resolver)
 query.set_field("course", course_resolver)
 query.set_field("user", user_resolver)
 query.set_field("schedule", schedule_resolver)
+query.set_field("scheduleRestriction", schedule_with_restrictions_resolver)
 course = ObjectType("Course")
 course.set_field("courseDetail", course_detail_resolver)
 mutation = ObjectType("Mutation")

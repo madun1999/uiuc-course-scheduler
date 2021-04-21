@@ -59,7 +59,9 @@ def section_collides_memoizer(f):
 def section_collides(section_a, section_b):
     """Determines if section_a and section_b cannot be scheduled together"""
     # check part of term
-    if section_a["part_of_term"] != section_b["part_of_term"]:
+    a_term = section_a["part_of_term"]
+    b_term = section_b["part_of_term"]
+    if a_term != b_term and a_term != "1" and b_term != "1": # part_of_term "1" means ALL parts of term
         return False
     # check meeting times
     meetings_a = section_a["meetings"]
@@ -79,8 +81,10 @@ def powerset(iterable):
 
 
 def fit_course_in_schedules(schedules: Set[Schedule], course) -> Set[Schedule]:
-    """Fit a course in schedules. Return list of fitted schedules that contains course."""
-
+    """
+    @deprecated
+    Fit a course in schedules. Return list of fitted schedules that contains course.
+    """
     new_schedules = set()
     for old_schedule in schedules:  # schedule is Schedule object
         for new_section in course["sections"]:
@@ -115,6 +119,7 @@ def _schedule_courses_memoizer(f):
 @_schedule_courses_memoizer
 def _schedule_courses(courses: List[Course]) -> Set[Schedule]:
     """
+    @deprecated
     Helper function for schedule_courses
     resulting schedules is all possible schedules with all of `courses` input.
     :param courses: list of courses to be scheduled
@@ -137,6 +142,7 @@ def _schedule_courses(courses: List[Course]) -> Set[Schedule]:
 
 def schedule_courses(courses: List[Course]) -> Tuple[Optional[Set[Schedule]], Optional[str]]:
     """
+    @deprecated
     Schedule the given courses.
     Current assumption/constraints:
         - len(courses) <= 20
