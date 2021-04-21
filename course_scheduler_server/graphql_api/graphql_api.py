@@ -18,8 +18,9 @@ from werkzeug.exceptions import BadRequest
 
 from db.login import get_user, update_user
 from scheduler.scheduler import schedule_courses
-from scheduler.scheduler_restriction import schedule_courses_with_restrictions
+# from scheduler.scheduler_restriction import schedule_courses_with_restrictions
 from google_auth.google_oauth import check_google_token
+from scheduler.scheduler_restriction import RestrictionScheduler
 
 dotenv.load_dotenv()
 
@@ -103,6 +104,10 @@ def update_user_resolver(_, info):
 
 
 def schedule_resolver(*_, courses):
+    """
+    @deprecated
+    courses is a list of  {"courseId": str, "mandatory": bool}
+    """
     course_details = []
     for course_id in courses:
         subject = course_id.split()[0]
@@ -129,12 +134,21 @@ def schedule_resolver(*_, courses):
     return result
 
 
-def schedule_with_restrictions_resolver(*_, courses):
-    """courses is a list of  {"courseId": str, "mandatory": bool}"""
+def schedule_with_restrictions_resolver(*_, courses, restrictions):
+    """
+    courses is a list of  {"courseId": str, "mandatory": bool}
+    restrictions is {"maxCourses": int, "minMandatory": int, breaks: [Break!]}
+    `   where Break is {"start": str, "end": str, "days_of_the_week":
+    """
     course_details = []
-    for course_mand in courses:
-        course_id = course_mand["courseId"]
-        mandatory = course_mand["mandatory"]
+    max_courses = 100 if restrictions["maxCourses"] is None else restrictions["maxCourses"]
+    min_mandatory = 0 if restrictions["minMandatory"] is None else restrictions["minMandatory"]
+    breaks = [{"start": break1["start"], "end": break1["end"], "days_of_the_week": break1["daysOfTheWeek"]}
+              for break1 in restrictions["breaks"]]
+
+    for annotated_course in courses:
+        course_id = annotated_course["courseId"]
+        mandatory = annotated_course["mandatory"]
         subject = course_id.split()[0]
         course_num = course_id.split()[1]
         course_detail = database.get_course_detail(subject, course_num)
@@ -144,7 +158,8 @@ def schedule_with_restrictions_resolver(*_, courses):
                 "error": f"Course {course_id} does not exist."
             }
         course_details.append({"course": course_detail, "mandatory": mandatory})
-    schedules, error = schedule_courses_with_restrictions(course_details)
+    restriction_scheduler = RestrictionScheduler(max_courses, min_mandatory, breaks)
+    schedules, error = restriction_scheduler.schedule_courses(course_details)
     if error:
         return {
             "success": False,
@@ -153,7 +168,7 @@ def schedule_with_restrictions_resolver(*_, courses):
     result = {
         "success": True,
         "schedules": [
-            {"sections": schedule} for schedule in schedules
+            {"sections": schedule.to_list()} for schedule in schedules
         ]
     }
     return result

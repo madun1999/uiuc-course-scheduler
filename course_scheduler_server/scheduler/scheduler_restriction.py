@@ -4,7 +4,7 @@ from models.course import make_course
 from models.meeting import make_meeting
 from models.section import make_section, Section
 from scheduler.schedule import AnnotatedCourse, Break, Schedule, make_annotated_section
-from scheduler.scheduler import powerset, _schedule_courses_memoizer, section_collides
+from scheduler.scheduler import powerset, section_collides
 
 
 def fit_course_in_schedules(schedules: Set[Schedule], annotated_course: AnnotatedCourse) -> Set[Schedule]:
@@ -27,6 +27,18 @@ def fit_course_in_schedules(schedules: Set[Schedule], annotated_course: Annotate
                 new_schedules.add(schedule_copy)
     return new_schedules
 
+
+def _schedule_courses_memoizer(f):
+    """Memoize _schedule_courses"""
+    course_schedule_memo = {}
+
+    def memoized__schedule_courses(self, courses: List[AnnotatedCourse]):
+        course_list_key = frozenset([course["course"]["course_id"] for course in courses])
+        if course_list_key not in course_schedule_memo:
+            course_schedule_memo[course_list_key] = f(self, courses)
+        return course_schedule_memo[course_list_key]
+
+    return memoized__schedule_courses
 
 
 class RestrictionScheduler:
@@ -60,9 +72,9 @@ class RestrictionScheduler:
                 instructors=[]
             )
             break_sections = make_section(
-                section_id=-idx,
-                section_number=f"BREAK{idx}",
-                section_title=f"Break{idx}",
+                section_id=-idx-1,
+                section_number=f"BREAK{idx+1}",
+                section_title=f"Break{idx+1}",
                 section_text="",
                 part_of_term="1",
                 enrollment_status="Open",
@@ -89,16 +101,16 @@ class RestrictionScheduler:
             - section part_of_term, meeting days_of_the_week, meeting start/end are checked
             - section_id will not be negative (used for breaks)
 
-        :param courses: list of course details
-        :return list of list of sections in dictionaries, error string
+        :param courses: list of AnnotatedCourse
+        :return set of Schedules
         """
         if len(courses) > 20:
             return None, "Too many courses"
         schedules: Set[Schedule] = set()
         for courses_subset in powerset(courses):
-            schedules.union(self._schedule_courses(courses_subset))
+            schedules = schedules.union(self._schedule_courses(courses_subset))
         # enforce min mandatory course count
-        schedules = {schedule for schedule in schedules if schedule.mandatory_count() > self.min_mandatory}
+        schedules = {schedule for schedule in schedules if schedule.mandatory_count() >= self.min_mandatory}
         return schedules, None  # result, error string
 
     @_schedule_courses_memoizer
@@ -122,9 +134,12 @@ class RestrictionScheduler:
                 continue
             subset_schedules: Set[Schedule] = self._schedule_courses(remaining_courses_subset)
             if len(remaining_courses) + 1 <= self.max_courses:  # enforce max courses restriction
-                all_schedules: Set[Schedule] = fit_course_in_schedules(subset_schedules, last_course)
+                fitted_schedules: Set[Schedule] = fit_course_in_schedules(subset_schedules, last_course)
             else:
-                all_schedules: Set[Schedule] = subset_schedules
-            all_schedules.union(all_schedules)
+                fitted_schedules: Set[Schedule] = subset_schedules
+            all_schedules = all_schedules.union(fitted_schedules)
         return all_schedules
+
+
+
 

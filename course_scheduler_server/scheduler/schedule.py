@@ -34,10 +34,13 @@ class Schedule:
         self.sections[section["section_id"]] = section
 
     def __hash__(self):
-        hash(frozenset(self.sections.keys()))
+        return hash(frozenset(self.sections.keys()))
 
     def __eq__(self, other):
         return frozenset(self.sections.keys()) == frozenset(other.sections.keys())
+
+    def __repr__(self):
+        return repr(frozenset(self.sections.keys()))
 
     def copy(self) -> 'Schedule':
         """shallow copy of the schedule"""
@@ -47,17 +50,20 @@ class Schedule:
 
     def enumerate_sections(self):
         """Returns an iterator for the sections in this schedule. NOT annotated sections."""
-        for _, annotated_section in self.sections.values():
+        for _, annotated_section in self.sections.items():
             yield annotated_section["section"]
 
     def mandatory_count(self):
         """Count the number of mandatory sections in this schedule"""
         count = 0
-        for _, annotated_section in self.sections.values():
+        for _, annotated_section in self.sections.items():
             if annotated_section["mandatory"]:
                 count += 1
         return count
 
+    def to_list(self):
+        """Returns a list of sections in this schedule. NOT annotated sections. """
+        return list(self.enumerate_sections())
 
 class AnnotatedCourse(TypedDict):
     """

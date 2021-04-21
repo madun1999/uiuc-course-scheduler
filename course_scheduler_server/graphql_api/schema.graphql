@@ -73,12 +73,28 @@ type UpdateUserResult {
     error: String
 }
 
+input Break {
+    start: String!
+    end: String!
+    daysOfTheWeek: String!
+}
+
+input RestrictionInput {
+    maxCourses: Int
+    minMandatory: Int
+    breaks: [Break!]!
+}
+input AnnotatedCourseId {
+    mandatory: Boolean!
+    courseId: String!
+}
 type Query {
     subjects: SubjectsResult!
     courses(subject: String!): [Course!]           # null if error
     course(courseId: String!): Course!          # null if error
     user: User                                    # Only current user, null if error
     schedule(courses: [String!]!): ScheduleResult! # Strings are sectionIds
+    scheduleRestriction(courses: [AnnotatedCourseId!]!, restrictions: RestrictionInput!): ScheduleResult! # Strings are sectionIds
 }
 
 type Mutation {
