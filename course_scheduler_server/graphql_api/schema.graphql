@@ -22,6 +22,7 @@ type Meeting {
 }
 type Section {
     sectionId: Int!         # CRN
+    course: Course
     sectionNumber: String!
     sectionTitle: String
     sectionText: String
@@ -40,6 +41,7 @@ type User {
     email: String
     name: String
     picture: String
+    staredSchedules: [[Section]!]
 }
 
 type Schedule {
@@ -98,6 +100,6 @@ type Query {
 }
 
 type Mutation {
-    starSchedule(sections: [String!]!): StarResult!
+    starSchedule(sectionIds: [Int!]!): StarResult!
     updateUser: UpdateUserResult!
 }
