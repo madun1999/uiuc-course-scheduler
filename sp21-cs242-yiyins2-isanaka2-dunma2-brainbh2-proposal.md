@@ -221,10 +221,10 @@ Dun Ma:
 Yiyin Shen: 
 | Category | Total Score Allocated | Detailed Rubrics |
 | --- | --- | --- |
-| Update Home Screen | 4 | +1 add course form & course list usable <br> +1 generate schedule button & schedule list connected to backend <br> +1 restriction input forms usable <br> +1 importance factors' sliders <br> navigate to other screens |
+| Update Home Screen | 4 | +1 add course form & course list usable <br> +1 generate schedule button & schedule list connected to backend <br> +1 navigation to restriction screen  <br> +1 navigation to importance screen |
 | Update Course information Screen | 4 | +2 connected to backend <br> +1 handle loading <br> +1 handle error |
 | Update Schedule Screen | 4 | +2 add courses <br> +1 handle loading <br> +1 handle error | 
-| Update Profile Screen | 3 | +1 add list of saved schedules <br> +1 connect to backend <br> +1 handle error | 
+| Update Profile Screen | 3 | +1 show all user information <br> +1 connect to backend <br> +1 handle error | 
 | Unit Test | 5 | +0.5 per unit test |
 | Manual Test Plan | 5 | +1 per screen (max 4) <br> +1 error handling view |
 
