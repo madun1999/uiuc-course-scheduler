@@ -225,8 +225,7 @@ Yiyin Shen:
 | Update Course information Screen | 4 | +2 connected to backend <br> +1 handle loading <br> +1 handle error |
 | Update Schedule Screen | 4 | +2 add courses <br> +1 handle loading <br> +1 handle error | 
 | Update Profile Screen | 3 | +1 show all user information <br> +1 connect to backend <br> +1 handle error | 
-| Unit Test | 3 | +0.5 per unit test |
-| Manual Test Plan | 7 | +1 per screen (max 5) <br> +2 error handling view |
+| Manual Test Plan | 10 | +1 per screen (max 7) <br> +3 error handling view |
 
 ### Week 4: 
 Dun Ma: 
