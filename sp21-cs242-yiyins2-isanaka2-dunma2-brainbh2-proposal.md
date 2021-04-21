@@ -208,9 +208,9 @@ Yiyin Shen:
 Dun Ma: 
 | Category | Total Score Allocated | Detailed Rubrics |
 | --- | --- | --- |
-| Schedule Algorithm | 5 | +1 implement mandatory course restriction <br> +1 implement max course restriction <br> +2 implement breaks restriction <br> +1 algorithm is correct |
-| Update "schedule" API | 6 | +2 update "schedule" GraphQL endpoint with for each new restriction <br> +1 sort schedule by score <br> +1 authentication and error handling |
-| New "save" API | 4 | +2 implementing "save" mutation in GraphQL <br> +1 saving to MongoDB <br> +1 authentication and error handling |
+| Schedule Algorithm | 6 | +2 implement mandatory course restriction <br> +1 implement max course restriction <br> +2 implement breaks restriction <br> +1 algorithm is correct |
+| Update "schedule" API | 4 | +3 update "schedule" GraphQL endpoint with for each new restriction <br> +1 authentication and error handling |
+| New "save" API | 5 | +2 implementing "save" mutation in GraphQL <br> +2 saving to MongoDB <br> +1 authentication and error handling |
 | Unit Test | 5 | +0.5 per unit test |
 | Manual Test Plan | 5 | +1 per planned test for the APIs|
 Yiyin Shen: 
