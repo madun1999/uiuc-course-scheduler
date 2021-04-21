@@ -213,7 +213,6 @@ Dun Ma:
 | Category | Total Score Allocated | Detailed Rubrics |
 | --- | --- | --- |
 | Schedule Algorithm | 5 | +1 implement mandatory course restriction <br> +1 implement max course restriction <br> +2 implement breaks restriction <br> +1 algorithm is correct |
-| Score Algorithm | 2 | +1 implement importance factor's weight <br> +1 algorithm is correct |
 | Update "schedule" API | 5 | +1 update "schedule" GraphQL endpoint with for each new restriction <br> +1 sort schedule by score <br> +1 authentication and error handling |
 | New "save" API | 3 | +1 implementing "save" mutation in GraphQL <br> +1 saving to MongoDB <br> +1 authentication and error handling |
 | Unit Test | 10 | +0.5 per unit test |
@@ -232,16 +231,20 @@ Yiyin Shen:
 Dun Ma: 
 | Category | Total Score Allocated | Detailed Rubrics |
 | --- | --- | --- |
-| scraping RateMyProfessor | 13 | +3 use Selenium correctly <br> +4 scraped Professor information correctly <br> +2 scrape on demand <br> +2 store scraped data in MongoDB <br> +2 handle scraping error <br> | 
+| Score Algorithm | 5 | +2 implement gpa factor's <br> +1 implement A rate factor <br> +1 algorithm is correct <br> +1 connect to api |
+| Linked section identification | 6 | +2 get relevant information when calling CIS API | +2 correctly identify linked section type from course description | +2 correctly identify linked sections for a course | 
+| Linked section in scheduler | 4 | +2 correctly use linked section in scheduler | +2 correctly return linked section information in api |
 | Unit Test| 5 | +0.5 per unit test |
 | Manual Test Plan | 5 | +0.5 per manual test |
 
 Yiyin Shen: 
 | Category | Total Score Allocated | Detailed Rubrics |
 | --- | --- | --- |
-| Connect Professor and Course | 3 | +2 establish connections between professors and courses <br> +1 handle errors (e.g. missing professor) |
-| Score Algorithm | 4 | +2 add professor factors to importance factor <br> +1 algorithm is correct  <br> +1 handle missing data (i.e. no professor found in rateMyProfessor) |
-| Update "schedule" API | 3 | +3 update "schedule" GraphQL endpoint with for each new scoring system |
+| GPA information | 4 | +2 match instructor name correctly <br> +2 make GPA information available in section information |
+| Update Restrictions tab | 4 | +1 restrictions forum usable <br> +1 break list <br> +2 add breaks usable |  
+| Update Factor's Importancfe Screen | 3 | +1 sliders usable <br> +2 return value send to scoring system |
+| Update Schedule Screen | 2 | +2 update score on schedule tab |
+| Update Profile Screen | 3 | +1 static saved scheudle list <br> +2 connnect it with backend |
 | Unit Test | 5 | +0.5 per unit test |
 | Manual Test Plan | 5 | +1 per manual test |
 
