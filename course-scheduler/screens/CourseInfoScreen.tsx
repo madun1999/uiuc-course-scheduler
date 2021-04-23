@@ -1,57 +1,147 @@
 import * as React from 'react';
-import { StyleSheet } from 'react-native';
+import {FlatList, StyleSheet} from 'react-native';
 
 import { View } from '../components/Themed';
-import {Title, Button, Card, Paragraph, Subheading, DataTable} from 'react-native-paper';
+import {Title, Paragraph, DataTable, ActivityIndicator, Card, Text, Switch, Button, Subheading} from 'react-native-paper';
 import { ScrollView } from 'react-native-gesture-handler';
+import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
+import { CourseInfoParamList } from "../types";
+import {useContext, useEffect} from "react";
+import {UserContext} from '../contexts/UserContext'
+import {getUserProfile} from "../api/query";
+import axios from "axios";
 
-import {BottomTabParamList} from "../types";
-import {BottomTabNavigationProp} from "@react-navigation/bottom-tabs";
+export default function CourseInfoScreen({ navigation, route } :
+  { navigation : BottomTabNavigationProp<CourseInfoParamList, 'CourseInfoScreen'> }) {
 
-// type CourseInfoScreenNavigationProp = BottomTabNavigationProp<BottomTabParamList, 'CourseInfo'>;
-// type CourseInfoScreenProps = {
-//   navigation: CourseInfoScreenNavigationProp,
-// };
+  const [loggedIn, setLoggedIn] = React.useState<boolean>(false);
+  const [course, setCourse] = React.useState(null);
+  const [errorMsg, setErrorMsg] = React.useState<null | string>(null);
 
-export default function CourseInfoScreen({ navigation }) {
-    return (
+  const userInfo = useContext(UserContext)
+
+  const GRAPHQL_URL = 'http://127.0.0.1:5000/graphql';
+
+  const COURSE_QUERY = `query Course($courseId: String!) {
+    course(courseId: $courseId) {
+      courseDetail {
+        title
+        description
+        credit_hours
+        sections {
+          sectionId
+          sectionNumber
+          sectionTitle
+          sectionText
+          partOfTerm
+          enrollmentStatus
+          startDate
+          EndDate
+          meetings {
+            meetingType
+            start
+            end
+            daysOfTheWeek
+            buildingName
+            roomNumber
+            instructors {
+              firstName
+              lastName
+            }
+          }
+        }
+      }
+    }
+  }`;
+
+  async function getCourse(courseId) {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+    const response = await axios.post(GRAPHQL_URL,
+      { query: COURSE_QUERY, variables: { courseId } }, config);
+    setCourse(response.data.data.course.courseDetail);
+  }
+
+  React.useEffect(() => {
+    const token = userInfo.token;
+    console.log(userInfo)
+    if (token === null || token === '') {
+        setLoggedIn(false);
+      } else {
+        setLoggedIn(true);
+        getCourse(route.params?.courseId).then(
+          (response) => {},
+          (error) => { setErrorMsg(error.message); },
+        );
+    }
+  }, [navigation, userInfo]);
+
+  if (!loggedIn) {
+     return (
       <View style={styles.container}>
-      <Title style={{width: '95%'}}>CS 242 Programming Studio</Title>
-      <Paragraph style={{width: '95%'}}>
-        Intensive programming lab intended to strengthen skills in programming.
-      </Paragraph>
-      
-      <ScrollView style={{width: '95%'}}>
-      <ScrollView horizontal={true}>
-        <DataTable>
-          <DataTable.Header>
-            <DataTable.Title style={{width: 500}}>CRN</DataTable.Title>
-            <DataTable.Title>Type</DataTable.Title>
-            <DataTable.Title>Section</DataTable.Title>
-            <DataTable.Title>Time</DataTable.Title>
-            <DataTable.Title>Day</DataTable.Title>
-            <DataTable.Title>Location</DataTable.Title>
-            <DataTable.Title>Instructor</DataTable.Title>
-            <DataTable.Title>GPA</DataTable.Title>
-            <DataTable.Title>Professor's Rating</DataTable.Title>
-          </DataTable.Header>
-
-          <DataTable.Row>
-            <DataTable.Cell style={{width: 500}}>45328</DataTable.Cell>
-            <DataTable.Cell>Laboratory</DataTable.Cell>
-            <DataTable.Cell>AB1</DataTable.Cell>
-            <DataTable.Cell>ARRANGED</DataTable.Cell>
-            <DataTable.Cell>n.a.</DataTable.Cell>
-            <DataTable.Cell>ARR Siebel Center for Comp Sci</DataTable.Cell>
-            <DataTable.Cell>Woodley, M</DataTable.Cell>
-            <DataTable.Cell>3.8</DataTable.Cell>
-            <DataTable.Cell>4.0</DataTable.Cell>
-          </DataTable.Row>
-        </DataTable>
-      </ScrollView>
-      </ScrollView>
+        <Title>Log in to add courses. </Title>
       </View>
     );
+  }
+
+  if (errorMsg !== null) {
+    return <View style={styles.container}>{errorMsg}</View>;
+  }
+
+  if (course === null) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator animating />
+      </View>
+    );
+  }
+
+  function renderSections(props) {
+    const section = props.item;
+    const meetings = section.meetings[0]
+    // const instructors = meetings.instructors[0]
+    return (
+      <Card style={{marginVertical: 5}}>
+        <Card.Content>
+          <Text>Section ID: {section.sectionId}</Text>
+          <Text>Section Number: {section.sectionNumber}</Text>
+          <Text>Section Title: {section.sectionTitle === null ? "" : section.sectionTitle}</Text>
+          <Paragraph>Section Info: {section.sectionText === null ? "" : section.sectionText}</Paragraph>
+          <Text>Part of Term: {section.partOfTerm === null ? "" : section.partOfTerm}</Text>
+          <Text>Enrollment Status: {section.enrollmentStatus === null ? "" : section.enrollmentStatus}</Text>
+          <Text>Start Date: {section.startDate === null ? "" : section.startDate}</Text>
+          <Text>End Date : {section.EndDate === null ? "" : section.EndDate}</Text>
+          <Text>Meeting Type: {meetings.meetingType === null ? "" : meetings.meetingType}</Text>
+          <Text>Start: {meetings.start === null ? "" : meetings.start}</Text>
+          <Text>End: {meetings.end === null ? "" : meetings.end}</Text>
+          <Text>Days Of The Week: {meetings.daysOfTheWeek === null ? "" : meetings.daysOfTheWeek}</Text>
+          <Text>Location: {meetings.buildingName === null ? "" : meetings.buildingName }</Text>
+          <Text>Room: {meetings.roomNumber === null ? "" : meetings.roomNumber}</Text>
+          {/*<Text>Instructor: {instructors.lastName === null ? "" : instructors.lastName}, {instructors.firstName === null ? "" : instructors.firstName }</Text>*/}
+        </Card.Content>
+      </Card>
+    );
+  }
+
+  return (
+
+    <View style={styles.container}>
+    <Title style={{width: '95%'}}>{route.params?.courseId} {course.title}</Title>
+    <Text>{course.credit_hours}</Text>
+    <Paragraph style={{width: '95%'}}>{course.description}</Paragraph>
+
+    <ScrollView style={{width: '95%'}}>
+        <FlatList
+          data={course.sections}
+          renderItem={renderSections}
+          keyExtractor={ (item) => item.sectionId }
+        />
+    </ScrollView>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({

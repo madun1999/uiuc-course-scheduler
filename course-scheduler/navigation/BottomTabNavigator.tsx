@@ -14,68 +14,82 @@ import CourseInfoScreen from '../screens/CourseInfoScreen'
 import ScheduleViewScreen from '../screens/ScheduleViewScreen'
 import ProfileScreen from '../screens/ProfileScreen';
 import { BottomTabParamList, 
-  SchedulerParamList, 
-  ScheduleViewParamList, 
-  CoursesParamList, 
-  CourseInfoParamList, 
+  SchedulerParamList,
+  CoursesParamList,
   RestrictionsParamList, 
-  FactorsParamList, 
-  LoginParamList, 
+  FactorsParamList,
   ProfileParamList
 } from '../types';
+import {UserContext} from '../contexts/UserContext'
+import {useEffect, useState} from "react";
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
 export default function BottomTabNavigator() {
   const colorScheme = useColorScheme();
-
+  const defaultUser = {
+    token: "",
+    courses: [],
+    restrictions: {"minMandatory": 0, "maxAll": 10, breaks: []},
+    changeToken: (newToken : string) => {
+      setUser(user => ({...user, token: newToken}));
+    },
+    changeCourses: (newCourses) => {
+      setUser(user => ({...user, courses: newCourses}))
+    },
+    addCourse: (newCourse) => {
+      setUser(user => ({...user, courses: [...(user.courses), newCourse]}))
+    },
+    deleteCourse: (deleteCourseId) => {
+      setUser(user => ({...user, courses: user.courses.filter(item => item.courseId !== deleteCourseId)}))
+    },
+    changeRestrictions: (newRestrictions) => {
+      setUser(user => ({...user, courses: newRestrictions}))
+    },
+  }
+  const [user, setUser] = useState(defaultUser);
   return (
-    <BottomTab.Navigator
-      initialRouteName="Scheduler"
-      tabBarOptions={{ activeTintColor: Colors[colorScheme].tint }}>
-      <BottomTab.Screen
-        name="Scheduler"
-        component={SchedulerNavigator}
-        options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="calendar-edit" color={color} />,
-        }}
-      />
-      <BottomTab.Screen
-        name="Courses"
-        component={CoursesNavigator}
-        options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="book" color={color} />,
-        }}
-      />
-      <BottomTab.Screen
-        name="Restrictions"
-        component={RestrictionsNavigator}
-        options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="alert-octagon" color={color} />,
-        }}
-      />
-      <BottomTab.Screen
-        name="Factors"
-        component={FactorsNavigator}
-        options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="swap-vertical-bold" color={color} />,
-        }}
-      />
-      {/*<BottomTab.Screen*/}
-      {/*  name="Login"*/}
-      {/*  component={LoginNavigator}*/}
-      {/*  options={{*/}
-      {/*    tabBarIcon: ({ color }) => <TabBarIcon name="ios-code" color={color} />,*/}
-      {/*  }}*/}
-      {/*/>*/}
-      <BottomTab.Screen
-        name="Profile"
-        component={ProfileNavigator}
-        options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="account" color={color} />,
-        }}
-      />
-    </BottomTab.Navigator>
+    <UserContext.Provider value={user}>
+      <BottomTab.Navigator
+        initialRouteName="Scheduler"
+        tabBarOptions={{ activeTintColor: Colors[colorScheme].tint }}>
+        <BottomTab.Screen
+          name="Scheduler"
+          component={SchedulerNavigator}
+          options={{
+            tabBarIcon: ({ color }) => <TabBarIcon name="calendar-edit" color={color} />,
+          }}
+        />
+        <BottomTab.Screen
+          name="Courses"
+          component={CoursesNavigator}
+          options={{
+            tabBarIcon: ({ color }) => <TabBarIcon name="book" color={color} />,
+          }}
+        />
+        <BottomTab.Screen
+          name="Restrictions"
+          component={RestrictionsNavigator}
+          options={{
+            tabBarIcon: ({ color }) => <TabBarIcon name="alert-octagon" color={color} />,
+          }}
+        />
+        <BottomTab.Screen
+          name="Factors"
+          component={FactorsNavigator}
+          options={{
+            tabBarIcon: ({ color }) => <TabBarIcon name="swap-vertical-bold" color={color} />,
+          }}
+        />
+        <BottomTab.Screen
+          name="Profile"
+          component={ProfileNavigator}
+          options={{
+            tabBarIcon: ({ color }) => <TabBarIcon name="account" color={color} />,
+          }}
+        />
+      </BottomTab.Navigator>
+    </UserContext.Provider>
   );
 }
 
@@ -88,7 +102,6 @@ function TabBarIcon(props: { name: React.ComponentProps<typeof MaterialCommunity
 // Each tab has its own navigation stack, you can read more about this pattern here:
 // https://reactnavigation.org/docs/tab-based-navigation#a-stack-navigator-for-each-tab
 const SchedulerStack = createStackNavigator<SchedulerParamList>();
-
 function SchedulerNavigator() {
   return (
     <SchedulerStack.Navigator>
@@ -107,7 +120,6 @@ function SchedulerNavigator() {
 }
 
 const CoursesStack = createStackNavigator<CoursesParamList>();
-
 function CoursesNavigator() {
   return (
     <CoursesStack.Navigator>
@@ -126,7 +138,6 @@ function CoursesNavigator() {
 }
 
 const RestrictionsStack = createStackNavigator<RestrictionsParamList>();
-
 function RestrictionsNavigator() {
   return (
     <RestrictionsStack.Navigator>
@@ -140,7 +151,6 @@ function RestrictionsNavigator() {
 }
 
 const FactorsStack = createStackNavigator<FactorsParamList>();
-
 function FactorsNavigator() {
   return (
     <FactorsStack.Navigator>
@@ -152,19 +162,6 @@ function FactorsNavigator() {
     </FactorsStack.Navigator>
   );
 }
-
-// const LoginStack = createStackNavigator<LoginParamList>();
-// function LoginNavigator() {
-//   return (
-//     <LoginStack.Navigator>
-//       <LoginStack.Screen
-//         name="LoginScreen"
-//         component={LoginScreen}
-//         options={{ headerTitle: 'Login' }}
-//       />
-//     </LoginStack.Navigator>
-//   );
-// }
 
 const ProfileStack = createStackNavigator<ProfileParamList>();
 function ProfileNavigator() {

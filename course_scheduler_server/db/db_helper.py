@@ -35,12 +35,18 @@ def find(collection, query=None):
     if query is None:
         query = dict()
     cursor = mongo_db[collection].find(query)
-    return list(cursor)
+    ret = list(cursor)
+    return ret
 
 
 def has_key(collection, key):
     """If the collection has the key"""
-    return len(find(collection, {"_id": key})) > 0
+    try:
+        ret = len(find(collection, {"_id": key})) > 0
+    except Exception as e:
+        print(e)
+        raise e from e
+    return ret
 
 
 def delete_one(collection, query):

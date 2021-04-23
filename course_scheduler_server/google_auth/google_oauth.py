@@ -26,6 +26,8 @@ def check_google_token() -> User:
     bearer = auth.split()
     if bearer[0] != "Bearer":
         raise ValueError('Invalid token type.')
+    if len(bearer) < 2:
+        raise ValueError('No token provided.')
     token = bearer[1]
     # check token
     id_info = id_token.verify_oauth2_token(token, requests.Request())

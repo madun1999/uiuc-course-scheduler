@@ -4,8 +4,11 @@ import { StyleSheet } from 'react-native';
 import { View } from '../components/Themed';
 import Slider from '@react-native-community/slider';
 import {Title, Button, Card, Paragraph, Text} from 'react-native-paper';
+import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
+import { BottomTabParamList } from "../types";
 
-export default function SchedulerScreen() {
+export default function FactorsScreen({ navigation } :
+  { navigation : BottomTabNavigationProp<BottomTabParamList, 'Factors'> }) {
   const [state, setState] = React.useState('');
 
   return (
