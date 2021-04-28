@@ -15,7 +15,7 @@ def make_subject(*_,
     :param subject_id: subject short name. e.g. AAS, MATH
     :param name: subject full name. e.g. Asian American Studies
     """
-    Subject(
+    return Subject(
         subject_id=subject_id.strip(),
         name=name.strip()
     )

@@ -23,5 +23,5 @@ class Test(TestCase):
         """
         parsed_response = fetch_subject_courses_from_CIS('AAS', '2020/fall/')
         assert parsed_response['subject_id'] == 'AAS'
-        assert list(parsed_response['courses'][0].keys())[0] == '100'
-        assert parsed_response['courses'][0]['100'] == 'Intro Asian American Studies'
+        assert list(parsed_response['courses'][0].values())[0] == '100'
+        assert parsed_response['courses'][0]['title'] == 'Intro Asian American Studies'
