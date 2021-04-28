@@ -1,6 +1,6 @@
 import requests
 from xml.etree import ElementTree
-from course_scheduler_server.db.db_CIS_API_handler import post_subject
+from db.subject_handler import post_subject
 from models.subject import make_subject
 
 
