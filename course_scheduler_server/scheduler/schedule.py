@@ -1,4 +1,4 @@
-from typing import TypedDict, Dict
+from typing import TypedDict, Dict, Optional
 from typing import Set
 
 from models.course import Course
@@ -61,9 +61,12 @@ class Schedule:
                 count += 1
         return count
 
-    def to_list(self):
-        """Returns a list of sections in this schedule. NOT annotated sections. """
-        return list(self.enumerate_sections())
+    def jsonify(self, score):
+        """Returns a json object for this schedule with score. NOT annotated sections. """
+        return {"sections": list(self.enumerate_sections()), "score": score}
+
+    def count(self):
+        return len(self.sections)
 
 class AnnotatedCourse(TypedDict):
     """
@@ -81,3 +84,11 @@ class Break(TypedDict):
     start: str
     end: str
     days_of_the_week: str
+
+
+class Factor(TypedDict):
+    """
+    Dictionary of factors.
+    """
+    gpa: Optional[float]
+    aRate: Optional[float]
