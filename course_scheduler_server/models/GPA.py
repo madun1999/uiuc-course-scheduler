@@ -3,7 +3,7 @@ from typing import TypedDict, List
 
 class GPA(TypedDict):
     """GPA information of a section"""
-    average: float
+    gpa: float
     a_rate: float
 
 
@@ -19,6 +19,6 @@ def calculate_gpa(mean_grades: List[float]) -> GPA:
     average = sum(x * y for x, y in zip(mean_grades, GRADE_TO_GPA)) / sum(mean_grades)
     a_rate = (mean_grades[0] + mean_grades[1]) / sum(mean_grades)
     return {
-        "average": average,
+        "gpa": average,
         "a_rate": a_rate
     }
