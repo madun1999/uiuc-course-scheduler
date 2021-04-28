@@ -1,5 +1,6 @@
+import db.section_handler
 from db.login import get_user, update_user
-import db.db_CIS_API_handler as database
+import db.course_handler as database
 from ariadne import ObjectType
 
 
@@ -8,6 +9,7 @@ user_query = ObjectType("User")
 mutation = ObjectType("Mutation")
 
 user_binds = [query, user_query, mutation]
+
 
 @query.field("user")
 def user_resolver(_, info):
@@ -21,7 +23,7 @@ def user_resolver(_, info):
 @user_query.field("staredSchedules")
 def user_stared_schedules_resolver(obj, _):
     stared_schedules = obj["stared_schedule_ids"]
-    stared_schedules = [[database.get_section(section) for section in schedule]
+    stared_schedules = [[db.section_handler.get_section(section) for section in schedule]
                         for schedule in stared_schedules]
     return stared_schedules
 

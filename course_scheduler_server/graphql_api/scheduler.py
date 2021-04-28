@@ -1,13 +1,16 @@
-from ariadne import QueryType
-import db.db_CIS_API_handler as database
+from ariadne import QueryType, convert_kwargs_to_snake_case
+import db.course_handler as database
+from scheduler.schedule import Factor
+from scheduler.scheduler import schedule_score_gen
 from scheduler.scheduler_restriction import RestrictionScheduler
 
 query = QueryType()
 scheduler_binds = [query]
 
 
+@convert_kwargs_to_snake_case
 @query.field("schedule")
-def schedule_resolver(*_, courses, restrictions, factors):
+def schedule_resolver(*_, courses, restrictions, factors: Factor):
     """
     courses is a list of  {"courseId": str, "mandatory": bool}
     restrictions is {"maxCourses": int, "minMandatory": int, breaks: [Break!]}
@@ -34,15 +37,19 @@ def schedule_resolver(*_, courses, restrictions, factors):
         course_details.append({"course": course_detail, "mandatory": mandatory})
     restriction_scheduler = RestrictionScheduler(max_courses, min_mandatory, breaks)
     schedules, error = restriction_scheduler.schedule_courses(course_details)
+    schedule_scores = [(schedule, schedule_score_gen(factors=factors)(schedule)) for schedule in schedules]
+    sorted_schedules = sorted(schedule_scores, key=lambda x: x[1], reverse=True)
+
     if error:
         return {
             "success": False,
             "error": error
         }
+
     result = {
         "success": True,
         "schedules": [
-            {"sections": schedule.to_list()} for schedule in schedules
+            schedule.jsonify(score) for schedule, score in sorted_schedules
         ]
     }
     return result
