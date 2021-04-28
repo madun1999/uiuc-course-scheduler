@@ -120,42 +120,12 @@ def update_user_resolver(_, info):
     return {"success": True}
 
 
-def schedule_resolver(*_, courses):
-    """
-    @deprecated
-    courses is a list of  {"courseId": str, "mandatory": bool}
-    """
-    course_details = []
-    for course_id in courses:
-        subject = course_id.split()[0]
-        course_num = course_id.split()[1]
-        course_detail = database.get_course_detail(subject, course_num)
-        if not course_detail:
-            return {
-                "success": False,
-                "error": f"Course {course_id} does not exist."
-            }
-        course_details.append(course_detail)
-    schedules, error = schedule_courses(course_details)
-    if error:
-        return {
-            "success": False,
-            "error": error
-        }
-    result = {
-        "success": True,
-        "schedules": [
-            {"sections": schedule} for schedule in schedules
-        ]
-    }
-    return result
-
-
-def schedule_with_restrictions_resolver(*_, courses, restrictions):
+def schedule_resolver(*_, courses, restrictions, factors):
     """
     courses is a list of  {"courseId": str, "mandatory": bool}
     restrictions is {"maxCourses": int, "minMandatory": int, breaks: [Break!]}
-    `   where Break is {"start": str, "end": str, "days_of_the_week":
+    where Break is {"start": str, "end": str, "days_of_the_week": str}
+    factors is {"gpa": float, "a_rate": float}
     """
     course_details = []
     max_courses = 100 if restrictions["maxCourses"] is None else restrictions["maxCourses"]
@@ -190,6 +160,7 @@ def schedule_with_restrictions_resolver(*_, courses, restrictions):
     }
     return result
 
+
 @convert_kwargs_to_snake_case
 def star_schedule(_, info, section_ids):
     """
@@ -212,7 +183,6 @@ query.set_field("courses", courses_resolver)
 query.set_field("course", course_resolver)
 query.set_field("user", user_resolver)
 query.set_field("schedule", schedule_resolver)
-query.set_field("scheduleRestriction", schedule_with_restrictions_resolver)
 course_query = ObjectType("Course")
 course_query.set_field("courseDetail", course_detail_resolver)
 section_query = ObjectType("Section")

@@ -90,12 +90,18 @@ input AnnotatedCourseId {
     mandatory: Boolean!
     courseId: String!
 }
+
+input FactorInput {
+    gp: Float
+    aRate: Float
+}
+
 type Query {
     subjects: SubjectsResult!
     courses(subject: String!): [Course!]           # null if error
     course(courseId: String!): Course!          # null if error
     user: User                                    # Only current user, null if error
-    schedule(courses: [String!]!): ScheduleResult! # Strings are sectionIds
+    schedule(courses: [AnnotatedCourseId!]!, restrictions: RestrictionInput!, factors: FactorInput!): ScheduleResult!
     scheduleRestriction(courses: [AnnotatedCourseId!]!, restrictions: RestrictionInput!): ScheduleResult! # Strings are sectionIds
 }
 
