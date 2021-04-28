@@ -5,8 +5,11 @@ import { View } from '../components/Themed';
 import {Title, Button, Card, Paragraph, Subheading, TextInput, Text} from 'react-native-paper';
 import {ButtonGroup} from 'react-native-elements';
 import {ScrollView} from "react-native-gesture-handler";
+import {BottomTabNavigationProp} from "@react-navigation/bottom-tabs";
+import {BottomTabParamList} from "../types";
 
-export default function SchedulerScreen() {
+export default function RestrictionsScreen({ navigation } :
+  { navigation : BottomTabNavigationProp<BottomTabParamList, 'Restrictions'> })  {
   const [minMandatoryText, setMinMandatoryText] = React.useState('');
   const [maxText, setMaxText] = React.useState('');
   const [startTimeText, setStartTimeText] = React.useState('');

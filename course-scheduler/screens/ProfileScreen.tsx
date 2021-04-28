@@ -1,14 +1,13 @@
 import * as React from 'react';
-import { StyleSheet, Button } from 'react-native';
-import { ActivityIndicator } from 'react-native-paper';
-import EditScreenInfo from '../components/EditScreenInfo';
-import { Text, View } from '../components/Themed';
+import { StyleSheet } from 'react-native';
+import {ActivityIndicator, Button, Title} from 'react-native-paper';
+import { View } from '../components/Themed';
 import UserProfile from '../api/UserProfile';
 import { getUserProfile } from '../api/query';
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import { useIsFocused } from "@react-navigation/native";
 import {BottomTabNavigationProp} from "@react-navigation/bottom-tabs";
 import {BottomTabParamList} from "../types";
+import {useContext} from "react";
+import {UserContext} from '../contexts/UserContext'
 
 // screen parameter type
 type ProfileScreenNavigationProp = BottomTabNavigationProp<BottomTabParamList, 'Login'>;
@@ -21,28 +20,24 @@ export default function ProfileScreen({ navigation } : ProfileScreenProps) {
   const [error, setError] = React.useState<string | null>(null) // error to be displayed
   const [loggedIn, setLoggedIn] = React.useState<boolean>(false) // error to be displayed
 
+  const userInfo = useContext(UserContext)
   React.useEffect(() => {
-    AsyncStorage.getItem('googleAuthToken').then((token) => 
-      {
-        if (token === null) {
-          setLoggedIn(false);
-        } else {
-          console.log(token)
-          setLoggedIn(true);
-          getUserProfile(token).then(setUser).catch((e : Error) => setError(e.message));
-        }
-      }
-    );
-  }, [navigation]);
+    const token = userInfo.token;
+    if (token === null || token === '') {
+        setLoggedIn(false);
+      } else {
+        console.log(token)
+        setLoggedIn(true);
+        getUserProfile(token).then(setUser).catch((e : Error) => setError(e.message));
+    }
+  }, [navigation, userInfo.token]);
 
   // not logged in
   if (!loggedIn) {
      return (
       <View style={styles.container}>
-        <Button
-          title="Log in"
-          onPress={() => {navigation.push("LoginScreen")}}
-        />
+        <Button style={styles.button} icon="account-arrow-left" mode="contained"
+                onPress={() => {navigation.push("LoginScreen")}}>Log in</Button>
       </View>
     );
   }
@@ -51,12 +46,10 @@ export default function ProfileScreen({ navigation } : ProfileScreenProps) {
   if (error !== null) {
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>{error}</Text>
-        <Text style={styles.title}>Maybe you didn't log in.</Text>
-        <Button
-          title="Log in"
-          onPress={() => {navigation.push("LoginScreen")}}
-        />
+        <Title>{error}</Title>
+        <Title>Maybe you didn't log in.</Title>
+        <Button style={styles.button} icon="account-arrow-left" mode="contained"
+                onPress={() => {navigation.push("LoginScreen")}}>Log in</Button>
       </View>
     );
   }
@@ -73,11 +66,10 @@ export default function ProfileScreen({ navigation } : ProfileScreenProps) {
   // User is loaded
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Email: {user.email}</Text>
-      <Button
-        title="Logout" 
-        onPress={() => {AsyncStorage.removeItem('googleAuthToken').then(() => setLoggedIn(false))}}
-      /> 
+      <Title>User: {user.email}</Title>
+      <Button style={styles.button} icon="account-arrow-right" mode="contained"
+              onPress={() => {userInfo.changeToken(""); setUser(null);}}
+      >Log Out</Button>
     </View>
   );
 }
@@ -88,9 +80,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
+  button: {
+    marginTop: 20,
+    width: '60%'
   },
   separator: {
     marginVertical: 30,

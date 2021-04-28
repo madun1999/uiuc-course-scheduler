@@ -5,6 +5,9 @@ export type RootStackParamList = {
 
 export type BottomTabParamList = {
   Scheduler: undefined;
+  Courses: undefined;
+  Restrictions: undefined;
+  Factors: undefined;
   Login: undefined;
   Profile: undefined;
 };

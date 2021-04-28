@@ -1,12 +1,15 @@
 /** Login Screen */
 import * as React from 'react';
-import { StyleSheet, Button } from 'react-native';
+import { StyleSheet } from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
 import * as Google from 'expo-auth-session/providers/google';
-import { Text, View } from '../components/Themed';
+import { View } from '../components/Themed';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {BottomTabParamList} from "../types";
 import {BottomTabNavigationProp} from "@react-navigation/bottom-tabs";
+import {Button, Title} from 'react-native-paper';
+import {useContext} from "react";
+import {UserContext} from "../contexts/UserContext";
 
 // screen parameter type
 type LoginScreenNavigationProp = BottomTabNavigationProp<BottomTabParamList, 'Login'>;
@@ -19,31 +22,33 @@ WebBrowser.maybeCompleteAuthSession();
 
 export default function LoginScreen({ navigation } : LoginScreenProps) {
   // Google login
+  const user = useContext(UserContext)
   const [request, response, promptAsync] = Google.useAuthRequest({
     responseType: "id_token",
     expoClientId: process.env.GOOGLE_APP_CLIENT_ID,
     iosClientId: process.env.GOOGLE_APP_CLIENT_ID,
     androidClientId: process.env.GOOGLE_APP_CLIENT_ID,
-    webClientId: process.env.GOOGLE_WEB_CLIENT_ID,
+    webClientId: '399183208162-br9tdb9ob4figvn6jr3cds1s60lgpook.apps.googleusercontent.com',
   });
   React.useEffect(() => {
     if (response?.type === 'success') {
       const { params } = response;
       const accessToken = params?.id_token;
-      AsyncStorage.setItem('googleAuthToken', accessToken === undefined ? "" : accessToken).then(() => {navigation.navigate("ProfileScreen")});
+      user.changeToken(accessToken === undefined ? "GotNoToken" : accessToken);
+      navigation.navigate("ProfileScreen");
     }
   }, [response])
   
   return (
     <View style={styles.container}>
-      <Text style={styles.title}> UIUC {"\n"} Course {"\n"} Scheduler </Text>
+      <Title>UIUC Course Scheduler</Title>
       <Button
+        style={styles.button}
+        icon="google"
+        mode="contained"
         disabled={!request}
-        title="Google Sign In" 
-        onPress={() => {
-          promptAsync();
-          }}
-      />
+        onPress={() => {promptAsync();}}
+      >Google Sign In</Button>
     </View>
   );
 }
@@ -54,10 +59,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    textAlign: 'center',
+  button: {
+    marginTop: 20,
+    width: '60%'
   },
   separator: {
     marginVertical: 30,
