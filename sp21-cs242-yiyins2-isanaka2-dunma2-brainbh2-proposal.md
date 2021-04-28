@@ -227,22 +227,21 @@ Yiyin Shen:
 Dun Ma: 
 | Category | Total Score Allocated | Detailed Rubrics |
 | --- | --- | --- |
-| Score Algorithm | 5 | +2 implement gpa factor's <br> +1 implement A rate factor <br> +1 algorithm is correct <br> +1 connect to api |
-| Linked section identification | 6 | +2 get relevant information when calling CIS API | +2 correctly identify linked section type from course description | +2 correctly identify linked sections for a course | 
-| Linked section in scheduler | 4 | +2 correctly use linked section in scheduler | +2 correctly return linked section information in api |
+| GPA information | 4 | +2 match instructor name correctly <br> +2 make GPA information available in section information |
+| Score Algorithm | 4 | +1 implement gpa factor's <br> +1 implement A rate factor <br> +1 algorithm is correct <br> +1 connect to api |
+| Linked section identification | 4 | +2 get relevant information when calling CIS API  <br> +2 correctly identify linked sections for a course | 
+| Linked section in scheduler | 3 | +1 correctly use linked section in scheduler <br> +2 correctly return linked section information in api |
 | Unit Test| 5 | +0.5 per unit test |
 | Manual Test Plan | 5 | +0.5 per manual test |
 
 Yiyin Shen: 
 | Category | Total Score Allocated | Detailed Rubrics |
 | --- | --- | --- |
-| GPA information | 4 | +2 match instructor name correctly <br> +2 make GPA information available in section information |
-| Update Restrictions tab | 4 | +1 restrictions forum usable <br> +1 break list <br> +2 add breaks usable |  
-| Update Factor's Importancfe Screen | 3 | +1 sliders usable <br> +2 return value send to scoring system |
+| Update Restrictions tab | 4 | +1 restrictions form usable <br> +1 break list <br> +2 add breaks usable |  
+| Update Factor's Importance Screen | 4 | +2 sliders usable <br> +2 return value send to scoring system |
 | Update Schedule Screen | 2 | +2 update score on schedule tab |
-| Update Profile Screen | 3 | +1 static saved scheudle list <br> +2 connnect it with backend |
-| Unit Test | 5 | +0.5 per unit test |
-| Manual Test Plan | 5 | +1 per manual test |
+| Update Profile Screen | 5 | +1 show static list of saved schedules <br> +2 connect the list with backend <br> +2 navigate to schedule view screen |
+| Manual Test Plan | 10 | +1 per manual test |
 
 ## Scoring Spreadsheets
 Scoring Spreadsheets are available in the folder `scoring spreadsheets`.
