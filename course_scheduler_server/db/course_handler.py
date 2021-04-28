@@ -1,11 +1,5 @@
-from os import getenv
-from pymongo import MongoClient
-from dotenv import load_dotenv
-
 from CIS_API.fetch_course import fetch_course_from_CIS
-from db.db_helper import find_one
-
-load_dotenv()
+from db.db_helper import find_one, replace_one
 
 
 def post_course(course):
@@ -13,9 +7,7 @@ def post_course(course):
     Add a course to database
     :param course: the course to add
     """
-    client = MongoClient(getenv('MONGODB_KEY'))
-    db = client[getenv('MONGODB_DB')]
-    db['courses'].replace_one({'course_id': course['course_id']}, course, upsert=True)
+    replace_one('courses', {'course_id': course['course_id']}, course)
 
 
 def add_course_to_db(subject_id, course_num, year_semester='2021/fall/'):

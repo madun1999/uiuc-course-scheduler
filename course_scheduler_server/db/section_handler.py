@@ -1,12 +1,6 @@
-from os import getenv
-from pymongo import MongoClient
-from dotenv import load_dotenv
 
-from CIS_API.fetch_course import fetch_course_from_CIS
 from db.course_handler import get_course_from_section
-from db.db_helper import find, find_one
-
-load_dotenv()
+from db.db_helper import find_one, replace_one
 
 
 def get_section_from_courses(section_id: int):
@@ -20,9 +14,7 @@ def get_section_from_courses(section_id: int):
 
 def post_section(section):
     """Add section to sections collection"""
-    client = MongoClient(getenv('MONGODB_KEY'))
-    db = client[getenv('MONGODB_DB')]
-    db['sections'].replace_one({'section_id': section['section_id']}, section, upsert=True)
+    replace_one('sections', {'section_id': section['section_id']}, section)
 
 
 def get_section(section_id: int):

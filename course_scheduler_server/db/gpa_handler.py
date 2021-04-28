@@ -1,16 +1,10 @@
 from functools import lru_cache
-from os import getenv
 from typing import Optional
-
-from pymongo import MongoClient
-from dotenv import load_dotenv
-
 from db.course_handler import get_course_from_section
-from db.db_helper import find_one
+from db.db_helper import find_one, replace_one
 from db.section_handler import post_section, get_section
 from models.GPA import GPA, calculate_gpa
 
-load_dotenv()
 
 NO_GPA_SECTION = "No GPA info"
 
@@ -20,9 +14,7 @@ def post_course_gpas(course):
     Add course gpas to course_gpas collection
     :param course: the course gpas to add
     """
-    client = MongoClient(getenv('MONGODB_KEY'))
-    db = client[getenv('MONGODB_DB')]
-    db['course_gpas'].replace_one({'course_id': course['course_id']}, course, upsert=True)
+    replace_one("course_gpas", {'course_id': course['course_id']}, course)
 
 
 def post_section_gpa(section, gpa):
@@ -53,8 +45,11 @@ def get_gpa_from_course_gpa(section_id, section) -> Optional[GPA]:
     def match_name(info):
         return info["first_name"][0].upper() == first_name_initial \
                and info["last_name"] == last_name
-
-    mean_grades = next(filter(match_name, instructors_gpa))["mean_grades"]
+    mean_grades_it = filter(match_name, instructors_gpa)
+    try:
+        mean_grades = next(mean_grades_it)["mean_grades"]
+    except StopIteration:  # no instructor found
+        return None
     return calculate_gpa(mean_grades)
 
 
@@ -70,6 +65,7 @@ def get_section_gpa(section_id: int) -> Optional[GPA]:
         gpa = get_gpa_from_course_gpa(section_id, section)
         if gpa is None:
             section["gpa"] = NO_GPA_SECTION
+            post_section(section)
             return None
         else:
             post_section_gpa(section, gpa)
