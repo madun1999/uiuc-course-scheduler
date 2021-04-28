@@ -1,5 +1,5 @@
 from unittest import TestCase
-from course_scheduler_server.CIS_API.meeting import Meeting
+from models.meeting import Meeting, make_meeting
 
 
 class TestMeeting(TestCase):
@@ -7,7 +7,12 @@ class TestMeeting(TestCase):
         """
         Test Meeting structure and meeting_to_dict
         """
-        meeting = Meeting(1, 1, 1, '  MW   ', 1, 1, 1)
-        meeting_dict = meeting.meeting_to_dict()
-        assert meeting_dict['meeting_type'] == 1
-        assert meeting_dict['days_of_the_week'] == 'MW'
+        meeting = make_meeting(meeting_type=1,
+                               start=1,
+                               end=1,
+                               days_of_the_week='  MW   ',
+                               building_name=1,
+                               room_number=1,
+                               instructors=1)
+        assert meeting['meeting_type'] == 1
+        assert meeting['days_of_the_week'] == 'MW'

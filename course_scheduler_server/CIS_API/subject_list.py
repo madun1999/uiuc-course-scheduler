@@ -1,6 +1,7 @@
 import requests
 from xml.etree import ElementTree
 from course_scheduler_server.db.db_CIS_API_handler import post_subject
+from models.subject import make_subject
 
 
 def fetch_subjects_from_CIS(year_semester='2021/fall'):
@@ -17,10 +18,10 @@ def fetch_subjects_from_CIS(year_semester='2021/fall'):
     subject_root = ElementTree.fromstring(subject_response.content)
     subjects = []
     for subject in subject_root.find('subjects'):
-        current_subject = {
-            'subject_id': subject.attrib['id'],
-            'name': subject.text
-        }
+        current_subject = make_subject(
+            subject_id=subject.attrib['id'],
+            name=subject.text
+        )
         subjects.append(current_subject)
     return subjects
 

@@ -1,6 +1,6 @@
 import pymongo
 from course_scheduler_server.db.login import deactivate, get_user, sign_up, user_exist
-from course_scheduler_server.models.user import User
+from course_scheduler_server.models.user import User, make_user
 from os import getenv
 from dotenv import load_dotenv
 
@@ -15,36 +15,36 @@ ID_TOKEN = getenv("TEST_TOKEN")
 # db
 
 def test_sign_up(app, client):
-    sign_up(User("1", "1@1.com"))
-    assert user_exist(User("1", "1@1.com"))
-    deactivate(User("1", "1@1.com"))
+    sign_up(make_user(uid="1", email="1@1.com", ))
+    assert user_exist(make_user(uid="1", email="1@1.com"))
+    deactivate(make_user(uid="1", email="1@1.com"))
 
 
 def test_sign_up_already_exists(app, client):
-    sign_up(User("1", "1@1.com"))
-    assert not sign_up(User("1", "1@1.com"))
+    sign_up(make_user(uid="1", email="1@1.com"))
+    assert not sign_up(make_user(uid="1", email="1@1.com"))
 
 
 def test_deactivate(app, client):
-    sign_up(User("1", "1@1.com"))
-    deactivate(User("1", "1@1.com"))
-    assert not user_exist(User("1", "1@1.com"))
+    sign_up(make_user(uid="1", email="1@1.com"))
+    deactivate(make_user(uid="1", email="1@1.com"))
+    assert not user_exist(make_user(uid="1", email="1@1.com"))
 
 
 def test_deactivate_nonexist(app, client):
-    deactivate(User("1", "1@1.com"))
-    assert not deactivate(User("1", "1@1.com"))
+    deactivate(make_user(uid="1", email="1@1.com"))
+    assert not deactivate(make_user(uid="1", email="1@1.com"))
 
 
 def test_get_user(app, client):
-    sign_up(User("1", "1@1.com"))
-    user = get_user(User("1", "1@1.com"))
+    sign_up(make_user(uid="1", email="1@1.com"))
+    user = get_user(make_user(uid="1", email="1@1.com"))
     assert user["email"] == "1@1.com"
 
 
 def test_get_user_nonexist(app, client):
-    deactivate(User("1", "1@1.com"))
-    assert get_user(User("1", "1@1.com")) == {}
+    deactivate(make_user(uid="1", email="1@1.com"))
+    assert get_user(make_user(uid="1", email="1@1.com")) == {}
 
 
 def test_404(app, client):

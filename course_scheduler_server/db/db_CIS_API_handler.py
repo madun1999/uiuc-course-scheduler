@@ -2,7 +2,7 @@ from os import getenv
 from pymongo import MongoClient
 from dotenv import load_dotenv
 
-from CIS_API.course import fetch_course_from_CIS
+from CIS_API.fetch_course import fetch_course_from_CIS
 from db.db_helper import find, find_one
 
 load_dotenv()
@@ -74,3 +74,14 @@ def get_course_detail(subject_id: str, course_num):
     return course_detail
 
 
+def get_course_from_section(section_id: int):
+    course = find_one('courses', {'sections.section_id': section_id})
+    return course
+
+
+def get_section(section_id: int):
+    course = get_course_from_section(section_id)
+    if course is None:
+        return None
+    matched_sections = filter(lambda sections: sections['section_id'] == section_id, course["sections"])
+    return next(matched_sections)

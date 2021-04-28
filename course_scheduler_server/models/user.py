@@ -1,24 +1,29 @@
-from typing import Optional
+from typing import Optional, TypedDict, List
 
 
-# User class
-
-class User:
+class User(TypedDict):
     id: str
     email: Optional[str]
     name: Optional[str]
     picture: Optional[str]
+    stared_schedule_ids: List[List[int]]
 
-    def __init__(self, uid: str, email: Optional[str], name: Optional[str], picture: Optional[str]) -> None:
-        self.id = uid
-        self.email = email
-        self.name = name
-        self.picture = picture
 
-    def to_db_dict(self):
-        return {
-            "_id": self.id,
-            "email": self.email,
-            "name": self.name,
-            "picture": self.picture
-        }
+def make_user(*_, uid: str, email: Optional[str] = None, name: Optional[str] = None, picture: Optional[str] = None) -> User:
+    return User(
+        id=uid,
+        email=email,
+        name=name,
+        picture=picture,
+        stared_schedule_ids=[]
+    )
+
+
+def user_to_db_dict(user: User):
+    return {
+        "_id": user["id"],
+        "email": user["email"],
+        "name": user["name"],
+        "picture": user["picture"],
+        "stared_schedule_ids": user["stared_schedule_ids"]
+    }
