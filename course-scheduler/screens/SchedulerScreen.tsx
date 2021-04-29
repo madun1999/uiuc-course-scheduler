@@ -115,7 +115,7 @@ export default function SchedulerScreen({ navigation } :
               View
             </Button>
             <Button style={{ width: '10%'}} icon="star" mode="text" onPress={() => {
-              setStars(schedule.sections.map(section => section.sectionId))
+              setStars(schedule.sections.map(section => section.sectionId).filter(sectionId => sectionId > 0))
             }}>
             </Button>
             <Paragraph style={{ width: '50%' }}>

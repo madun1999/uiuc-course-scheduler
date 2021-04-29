@@ -101,7 +101,7 @@ export default function CourseInfoScreen({ navigation, route } :
   function renderSections(props) {
     const section = props.item;
     const meetings = section.meetings[0]
-    // const instructors = meetings.instructors[0]
+    const instructors = meetings.instructors.length === 0 ? {last_name: "", first_name: ""} : meetings.instructors[0]
     return (
       <Card style={{marginVertical: 5}}>
         <Card.Content>
@@ -119,7 +119,7 @@ export default function CourseInfoScreen({ navigation, route } :
           <Text>Days Of The Week: {meetings.daysOfTheWeek === null ? "" : meetings.daysOfTheWeek}</Text>
           <Text>Location: {meetings.buildingName === null ? "" : meetings.buildingName }</Text>
           <Text>Room: {meetings.roomNumber === null ? "" : meetings.roomNumber}</Text>
-          {/*<Text>Instructor: {instructors.lastName === null ? "" : instructors.lastName}, {instructors.firstName === null ? "" : instructors.firstName }</Text>*/}
+          <Text>Instructor: {instructors.lastName === null ? "" : instructors.lastName}, {instructors.firstName === null ? "" : instructors.firstName }</Text>
         </Card.Content>
       </Card>
     );

@@ -128,7 +128,7 @@ export default function CoursesScreen({ navigation } :
       />
 
       <Button style={{ width: '95%' }} icon="plus-thick" mode="contained"
-              onPress={() => userInfo.addCourse({courseId: subjectText.concat(courseText), mandatory: false})}>
+              onPress={() => userInfo.addCourse({courseId: subjectText.trim().concat(" ").concat(courseText.trim()), mandatory: true})}>
         Add Courses
       </Button>
 
