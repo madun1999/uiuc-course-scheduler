@@ -119,7 +119,7 @@ export default function SchedulerScreen({ navigation } :
             }}>
             </Button>
             <Paragraph style={{ width: '50%' }}>
-              {schedule.sections.map(section => section.sectionId.toString().concat(", "))}
+              {schedule.sections.filter(section => section.sectionId > 0).map(section => section.sectionId.toString().concat(", "))}
             </Paragraph>
             <Subheading style={{ color: 'green', width: '15%' }}>
               {schedule.score}
