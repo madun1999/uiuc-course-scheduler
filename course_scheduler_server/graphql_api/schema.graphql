@@ -29,7 +29,7 @@ type Section {
     partOfTerm: String!
     enrollmentStatus: String!
     startDate: String
-    EndDate: String
+    endDate: String
     meetings: [Meeting!]!
 }
 type Instructor {
@@ -46,6 +46,7 @@ type User {
 
 type Schedule {
     sections: [Section!]!
+    score: Float
 }
 
 type ScheduleResult {
@@ -76,6 +77,7 @@ type UpdateUserResult {
 }
 
 input Break {
+    breakId: String!
     start: String!
     end: String!
     daysOfTheWeek: String!
@@ -92,7 +94,7 @@ input AnnotatedCourseId {
 }
 
 input FactorInput {
-    gp: Float
+    gpa: Float
     aRate: Float
 }
 

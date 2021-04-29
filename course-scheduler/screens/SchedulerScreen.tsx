@@ -22,8 +22,15 @@ export default function SchedulerScreen({ navigation } :
 
   const GRAPHQL_URL = 'http://127.0.0.1:5000/graphql';
 
-  const SCHEDULES_QUERY = `query Schedule($courses: [String!]!){
-    schedule(courses: $courses) {
+  const SCHEDULES_QUERY = `query Schedule(
+    $courses: [AnnotatedCourseId!]!, 
+    $restrictions: RestrictionInput!, 
+    $factors: FactorInput!
+  ){
+    schedule(
+      courses: $courses, 
+      restrictions: $restrictions
+      factors: $factors) {
       schedules {
         sections {
           sectionId
@@ -34,35 +41,47 @@ export default function SchedulerScreen({ navigation } :
             daysOfTheWeek
           }
         }
+        score
       }
     }
   }`;
 
-  async function getSchedules(courses) {
+  const STAR_QUERY = `
+  mutation Star($sections: [Int!]!){
+    starSchedule(sectionIds: $sections) {
+      success
+    }
+  }`;
+
+  async function getSchedules(courses, restrictions, factors) {
     const config = {
       headers: {
         Authorization: `Bearer ${userInfo.token}`,
       },
     };
     const response = await axios.post(GRAPHQL_URL,
-      { query: SCHEDULES_QUERY, variables: { courses } }, config);
+      { query: SCHEDULES_QUERY, variables: { courses, restrictions, factors } }, config);
     setSchedules(response.data.data.schedule.schedules);
+  }
+
+  async function setStars(sections) {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+    const response = await axios.post(GRAPHQL_URL,
+      { query: STAR_QUERY, variables: { sections } }, config);
   }
 
   React.useEffect(() => {
     const token = userInfo.token;
-    console.log(userInfo)
     if (token === null || token === '') {
         setLoggedIn(false);
       } else {
         setLoggedIn(true);
-        console.log(userInfo.courses.map(course => course.courseId))
-        getSchedules(userInfo.courses.map(course => course.courseId)).then(
-          (response) => {},
-          (error) => { setErrorMsg(error.message); },
-        );
     }
-  }, [navigation, userInfo]);
+  }, [navigation, userInfo, schedules]);
 
   if (!loggedIn) {
      return (
@@ -73,16 +92,18 @@ export default function SchedulerScreen({ navigation } :
   }
 
   if (errorMsg !== null) {
-    return <View style={styles.container}>{errorMsg}</View>;
+    return <View style={styles.container}>
+      <Title>{errorMsg}</Title>
+    </View>;
   }
 
-  if (schedules === null) {
-    return (
-      <View style={styles.container}>
-        <ActivityIndicator animating />
-      </View>
-    );
-  }
+  // if (schedules === null) {
+  //   return (
+  //     <View style={styles.container}>
+  //       <ActivityIndicator animating />
+  //     </View>
+  //   );
+  // }
 
   function renderSchedules(props) {
     const schedule = props.item;
@@ -93,13 +114,15 @@ export default function SchedulerScreen({ navigation } :
             <Button style={{ width: '25%'}} mode="text" onPress={() => navigation.push('ScheduleViewScreen', { schedule: schedule})}>
               View
             </Button>
-            <Button style={{ width: '10%'}} icon="star" mode="text" onPress={() => console.log()}>
+            <Button style={{ width: '10%'}} icon="star" mode="text" onPress={() => {
+              setStars(schedule.sections.map(section => section.sectionId))
+            }}>
             </Button>
             <Paragraph style={{ width: '50%' }}>
               {schedule.sections.map(section => section.sectionId.toString().concat(", "))}
             </Paragraph>
             <Subheading style={{ color: 'green', width: '15%' }}>
-                95
+              {schedule.score}
             </Subheading>
           </View>
         </Card.Content>
@@ -120,10 +143,30 @@ export default function SchedulerScreen({ navigation } :
       </Button>
 
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 10, width: '95%'}}>
-        <Title>Schedules</Title>
+        <Title style={{width: '40%'}}>Schedules</Title>
+        <Button style={{width: '40%'}} mode="contained" icon="refresh" onPress={
+          () => {
+            getSchedules(
+              userInfo.courses,
+              {
+                maxCourses: userInfo.maxCourses,
+                minMandatory: userInfo.minMandatory,
+                breaks: userInfo.breaks
+              },
+              {
+                gpa: userInfo.gpaFactor,
+                aRate: userInfo.aRateFactor
+              }
+            ).then(
+              (response) => {},
+              (error) => { setErrorMsg(error.message); },
+            )
+          }
+        }>
+          Generate Schedules</Button>
       </View>
 
-      <ScrollView style={{width: '95%'}}>
+      <ScrollView style={{width: '95%', marginTop: 5}}>
         <FlatList
           data={schedules}
           renderItem={renderSchedules}

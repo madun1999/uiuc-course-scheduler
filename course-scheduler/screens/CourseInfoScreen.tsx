@@ -36,7 +36,7 @@ export default function CourseInfoScreen({ navigation, route } :
           partOfTerm
           enrollmentStatus
           startDate
-          EndDate
+          endDate
           meetings {
             meetingType
             start
@@ -67,7 +67,6 @@ export default function CourseInfoScreen({ navigation, route } :
 
   React.useEffect(() => {
     const token = userInfo.token;
-    console.log(userInfo)
     if (token === null || token === '') {
         setLoggedIn(false);
       } else {
@@ -113,7 +112,7 @@ export default function CourseInfoScreen({ navigation, route } :
           <Text>Part of Term: {section.partOfTerm === null ? "" : section.partOfTerm}</Text>
           <Text>Enrollment Status: {section.enrollmentStatus === null ? "" : section.enrollmentStatus}</Text>
           <Text>Start Date: {section.startDate === null ? "" : section.startDate}</Text>
-          <Text>End Date : {section.EndDate === null ? "" : section.EndDate}</Text>
+          <Text>End Date : {section.endDate === null ? "" : section.endDate}</Text>
           <Text>Meeting Type: {meetings.meetingType === null ? "" : meetings.meetingType}</Text>
           <Text>Start: {meetings.start === null ? "" : meetings.start}</Text>
           <Text>End: {meetings.end === null ? "" : meetings.end}</Text>

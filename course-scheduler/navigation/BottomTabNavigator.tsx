@@ -30,12 +30,13 @@ export default function BottomTabNavigator() {
   const defaultUser = {
     token: "",
     courses: [],
-    restrictions: {"minMandatory": 0, "maxAll": 10, breaks: []},
+    minMandatory: 0,
+    maxCourses: 10,
+    breaks: [],
+    gpaFactor: 0,
+    aRateFactor: 0,
     changeToken: (newToken : string) => {
       setUser(user => ({...user, token: newToken}));
-    },
-    changeCourses: (newCourses) => {
-      setUser(user => ({...user, courses: newCourses}))
     },
     addCourse: (newCourse) => {
       setUser(user => ({...user, courses: [...(user.courses), newCourse]}))
@@ -43,8 +44,26 @@ export default function BottomTabNavigator() {
     deleteCourse: (deleteCourseId) => {
       setUser(user => ({...user, courses: user.courses.filter(item => item.courseId !== deleteCourseId)}))
     },
-    changeRestrictions: (newRestrictions) => {
-      setUser(user => ({...user, courses: newRestrictions}))
+    changeCourseMandatory: (courseId, mandatory) => {
+      setUser(user => ({...user, courses: user.courses.find(item => item.courseId === courseId).mandatory = mandatory}))
+    },
+    changeMinMandatory: (newMinMandatory)=>{
+      setUser(user => ({...user, minMandatory: newMinMandatory}))
+    },
+    changeMaxCourses: (newMaxCourses)=>{
+      setUser(user => ({...user, maxCourses: newMaxCourses}))
+    },
+    addBreak: (newBreak)=>{
+      setUser(user => ({...user, breaks: [...(user.breaks), newBreak]}))
+    },
+    deleteBreak: (deleteBreakId)=>{
+      setUser(user => ({...user, courses: user.breaks.filter(item => item.breakId !== deleteBreakId)}))
+    },
+    changeGPAFactor: (newGPAFactor)=>{
+      setUser(user => ({...user, gpaFactor: newGPAFactor}))
+    },
+    changeARateFactor: (newARateFactor)=>{
+      setUser(user => ({...user, newARateFactor: newARateFactor}))
     },
   }
   const [user, setUser] = useState(defaultUser);
@@ -176,6 +195,11 @@ function ProfileNavigator() {
         name="LoginScreen"
         component={LoginScreen}
         options={{ headerTitle: 'Login' }}
+      />
+      <SchedulerStack.Screen
+        name="ScheduleViewScreen"
+        component={ScheduleViewScreen}
+        options={{ headerTitle: 'Schedule View' }}
       />
     </ProfileStack.Navigator>
   );

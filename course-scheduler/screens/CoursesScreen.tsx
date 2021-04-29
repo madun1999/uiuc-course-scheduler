@@ -22,9 +22,12 @@ export default function CoursesScreen({ navigation } :
   const [isSwitchOn, setIsSwitchOn] = React.useState(false);
   const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn);
 
-  const [loggedIn, setLoggedIn] = React.useState<boolean>(false) // error to be displayed
+  const [selectedId, setSelectedId] = React.useState(null);
+
+  const [loggedIn, setLoggedIn] = React.useState<boolean>(false)
 
   const userInfo = useContext(UserContext)
+
   React.useEffect(() => {
     const token = userInfo.token;
     if (token === null || token === '') {
@@ -84,19 +87,22 @@ export default function CoursesScreen({ navigation } :
   // }
 
   function renderCourse(props) {
-    const course = props.item;
+    let course = props.item;
     return (
       <Card style={{marginVertical: 5}}>
         <Card.Content>
           <View style={{ flexDirection: 'row', alignItems: 'center'}}>
-            <Switch style={{ width: '10%'}} value={isSwitchOn} onValueChange={onToggleSwitch} />
+            <Switch style={{ width: '10%'}} value={course.mandatory} onValueChange={() =>{
+              setSelectedId(course.courseId);
+              userInfo.changeCourseMandatory(course.courseId, !course.mandatory);
+            }} />
             <Button style={{ width: '45%'}} mode="text"
-                    onPress={() => navigation.push('CourseInfoScreen', { courseId: course.courseId})}>
+                    onPress={() => navigation.push('CourseInfoScreen', { courseId: course.courseId })}>
               View More
             </Button>
-            <Subheading style={{ width: '35%' }}>
+            <Text style={{ width: '35%' }}>
               {course.courseId}
-            </Subheading>
+            </Text>
             <Button style={{ width: '10%'}} icon="delete" mode="text"
                     onPress={() => userInfo.deleteCourse(course.courseId)}>
             </Button>
@@ -134,6 +140,7 @@ export default function CoursesScreen({ navigation } :
             data={userInfo.courses}
             renderItem={renderCourse}
             keyExtractor={ (item) => item.courseId }
+            extraData={selectedId}
           />
       </ScrollView>
     </View>
