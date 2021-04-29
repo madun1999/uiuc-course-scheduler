@@ -53,10 +53,10 @@ def test_get_section_gpa_from_course_gpas(app, client):
     mongo_db["course_gpas"].insert_one(course_gpa)
 
     actual_gpa = get_section_gpa(12348)
-    assert actual_gpa["average"] == 2.119285714285714
+    assert actual_gpa["gpa"] == 2.119285714285714
     assert actual_gpa["a_rate"] == 1 / 7
     stored_section = mongo_db["sections"].find_one({"section_id": 12348})
-    assert stored_section["gpa"]["average"] == 2.119285714285714
+    assert stored_section["gpa"]["gpa"] == 2.119285714285714
     assert stored_section["gpa"]["a_rate"] == 1 / 7
 
 @mongomock.patch(servers=getenv("MONGODB_CONNECT"))
@@ -81,12 +81,12 @@ def test_get_section_gpa_from_course_gpas_add_section(app, client):
     mongo_db["courses"].insert_one(course)
     mongo_db["course_gpas"].insert_one(course_gpa)
     actual_gpa = get_section_gpa(12349)
-    assert actual_gpa["average"] == 2.119285714285714
+    assert actual_gpa["gpa"] == 2.119285714285714
     assert actual_gpa["a_rate"] == 1 / 7
     stored_section = mongo_db["sections"].find_one({"section_id": 12349})
     assert stored_section["section_id"] == 12349
     assert stored_section["section_number"] == "ADB"
-    assert stored_section["gpa"]["average"] == 2.119285714285714
+    assert stored_section["gpa"]["gpa"] == 2.119285714285714
     assert stored_section["gpa"]["a_rate"] == 1 / 7
 
 
