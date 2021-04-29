@@ -1,5 +1,5 @@
 import pandas as pd
-from course_scheduler_server.db.db_gpa_handler import post_course_gpas
+from course_scheduler_server.db.gpa_handler import post_course_gpas
 
 
 def parse_course_gpas(file='../uiuc-gpa-dataset.csv'):

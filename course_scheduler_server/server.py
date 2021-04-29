@@ -1,19 +1,16 @@
 """API Server"""
 from json import dumps
-
 from google_auth.google_oauth import check_google_token
 from db.login import deactivate, get_user, sign_up, user_exist
-from flask import Flask, request, abort, jsonify
+from flask import Flask
 from flask_cors import CORS
 from pymongo.errors import PyMongoError
 from graphql_api.graphql_api import graphql_page
-
+from tools import STATUS_OK, STATUS_BAD_REQUEST
 # the app
 app = Flask(__name__)
 # CORS
 CORS(app)
-STATUS_OK = 200
-STATUS_BAD_REQUEST = 400
 
 
 def wrap_response(result):

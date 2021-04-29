@@ -1,5 +1,6 @@
+from models.GPA import GPA
 from models.meeting import Meeting, TypedDict
-from typing import Optional, List
+from typing import Optional, List, Union
 
 
 class Section(TypedDict):
@@ -12,6 +13,7 @@ class Section(TypedDict):
     start_date: Optional[str]
     end_date: Optional[str]
     meetings: List[Meeting]
+    gpa: Union[Optional[GPA], str]
 
 
 def make_section(*_,
@@ -47,4 +49,5 @@ def make_section(*_,
         start_date=start_date,
         end_date=end_date,
         meetings=meetings,
+        gpa=None
     )

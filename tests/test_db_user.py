@@ -1,47 +1,47 @@
-import pymongo
+import mongomock
 from course_scheduler_server.db.login import deactivate, get_user, sign_up, user_exist
 from course_scheduler_server.models.user import User, make_user
 from os import getenv
 from dotenv import load_dotenv
 
 load_dotenv()
-mongo_client = pymongo.MongoClient(getenv("MONGODB_CONNECT"))
-mongo_db = mongo_client[getenv("MONGODB_DB")]
-user_collection = mongo_db["user"]
-
-ID_TOKEN = getenv("TEST_TOKEN")
 
 
 # db
-
+@mongomock.patch(servers=getenv("MONGODB_CONNECT"))
 def test_sign_up(app, client):
     sign_up(make_user(uid="1", email="1@1.com", ))
     assert user_exist(make_user(uid="1", email="1@1.com"))
     deactivate(make_user(uid="1", email="1@1.com"))
 
 
+@mongomock.patch(servers=getenv("MONGODB_CONNECT"))
 def test_sign_up_already_exists(app, client):
     sign_up(make_user(uid="1", email="1@1.com"))
     assert not sign_up(make_user(uid="1", email="1@1.com"))
 
 
+@mongomock.patch(servers=getenv("MONGODB_CONNECT"))
 def test_deactivate(app, client):
     sign_up(make_user(uid="1", email="1@1.com"))
     deactivate(make_user(uid="1", email="1@1.com"))
     assert not user_exist(make_user(uid="1", email="1@1.com"))
 
 
+@mongomock.patch(servers=getenv("MONGODB_CONNECT"))
 def test_deactivate_nonexist(app, client):
     deactivate(make_user(uid="1", email="1@1.com"))
     assert not deactivate(make_user(uid="1", email="1@1.com"))
 
 
+@mongomock.patch(servers=getenv("MONGODB_CONNECT"))
 def test_get_user(app, client):
     sign_up(make_user(uid="1", email="1@1.com"))
     user = get_user(make_user(uid="1", email="1@1.com"))
     assert user["email"] == "1@1.com"
 
 
+@mongomock.patch(servers=getenv("MONGODB_CONNECT"))
 def test_get_user_nonexist(app, client):
     deactivate(make_user(uid="1", email="1@1.com"))
     assert get_user(make_user(uid="1", email="1@1.com")) == {}

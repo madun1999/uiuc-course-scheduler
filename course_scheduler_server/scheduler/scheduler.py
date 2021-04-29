@@ -1,10 +1,11 @@
 """Scheduler algorithm."""
 # Note: "section_id" and "CRN" are equivalent in comments
 import time
-from typing import List, Tuple, Optional, Set
+from typing import List, Tuple, Optional, Set, Callable
 
+from db.gpa_handler import get_section_gpa
 from models.course import Course
-from scheduler.schedule import Schedule
+from scheduler.schedule import Schedule, Factor
 from itertools import combinations, chain
 
 TIME_FORMAT = "%I:%M %p"
@@ -61,7 +62,7 @@ def section_collides(section_a, section_b):
     # check part of term
     a_term = section_a["part_of_term"]
     b_term = section_b["part_of_term"]
-    if a_term != b_term and a_term != "1" and b_term != "1": # part_of_term "1" means ALL parts of term
+    if a_term != b_term and a_term != "1" and b_term != "1":  # part_of_term "1" means ALL parts of term
         return False
     # check meeting times
     meetings_a = section_a["meetings"]
@@ -166,7 +167,43 @@ def schedule_courses(courses: List[Course]) -> Tuple[Optional[Set[Schedule]], Op
     return schedules, None  # result, error string
 
 
+def mean(lst: List[float]) -> float:
+    """Average of a list of float. Return 0 for empty lists."""
+    if len(lst) == 0:
+        return 0
+    return sum(lst) / len(lst)
 
 
+def schedule_score_gen(factors: Factor) -> Callable[[Schedule], float]:
+    """
+    Generate a scorer for schedules.
+    Scores are given as the following:
+    100 score for each section in the schedule
+    20 score for each section with gpa information
+    6 * factor * a_rate score for each section a_rate and take average
+    factor * gpa score for each section gpa and take average
+    :param factors: Factor to consider
+    :return: a scorer of schedules
+    """
+    gpa_factor = factors["gpa"]
+    if gpa_factor is None:
+        gpa_factor = 0
+    a_rate_factor = factors["aRate"]
+    if a_rate_factor is None:
+        a_rate_factor = 0
 
+    def schedule_score(schedule: Schedule):
+        gpa_infos = [get_section_gpa(section["section_id"]) for section in schedule.enumerate_sections()]
+        gpa_infos = list(filter(lambda x: x is not None, gpa_infos))
+        # section count score
+        section_count_score = schedule.count() * 100
+        # has gpa info score
+        gpa_present_score = 20 * len(gpa_infos)
+        # A rate score and average GPA score
+        a_rates = [gpa_info["a_rate"] for gpa_info in gpa_infos]
+        gpas = [gpa_info["gpa"] for gpa_info in gpa_infos]
+        a_rate_score = 6 * a_rate_factor * mean(a_rates)
+        gpa_score = gpa_factor * mean(gpas)
+        return section_count_score + gpa_present_score + gpa_score + a_rate_score
 
+    return schedule_score

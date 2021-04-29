@@ -81,7 +81,21 @@ mutation {
 ### Schedule
 ```graphql
 query {
-  schedule(courses:["LING 506", "MATH 347"]) {
+  schedule(
+    courses:[
+      {courseId: "LING 506", mandatory: true}, 
+      {courseId: "CS 576", mandatory: true}
+    ]
+    restrictions:{
+      maxCourses: null
+      minMandatory: null
+      breaks: []
+    }
+    factors: {
+        gpa: null,
+        aRate: null
+    }
+  ){
     success
     errors
     schedules {
@@ -98,12 +112,19 @@ query {
 ### Schedule with no Restriction
 ```graphql
 query NormalSchedule{
-  scheduleRestriction(
-    courses:[{courseId: "LING 506", mandatory: true}, {courseId: "CS 576", mandatory: true}], 
+  schedule(
+    courses:[
+      {courseId: "LING 506", mandatory: true}, 
+      {courseId: "CS 576", mandatory: true}
+    ]
     restrictions:{
-    	maxCourses: null
+      maxCourses: null
       minMandatory: null
       breaks: []
+    }
+    factors: {
+        gpa: null,
+        aRate: null
     }) {
     success
     errors
@@ -126,13 +147,21 @@ query NormalSchedule{
 ### Schedule with minimum mandatory course restriction
 ```graphql
 query MinMandatoryRestriction{
-  scheduleRestriction(
-    courses:[{courseId: "LING 506", mandatory: true}, {courseId: "CS 576", mandatory: true}], 
+  schedule(
+    courses:[
+      {courseId: "LING 506", mandatory: true}, 
+      {courseId: "CS 576", mandatory: true}
+    ]
     restrictions:{
-    	maxCourses: null
+      maxCourses: null
       minMandatory: 2
       breaks: []
-    }) {
+    }
+    factors: {
+        gpa: null,
+        aRate: null
+    }
+  ) {
     success
     errors
     schedules {
@@ -158,13 +187,21 @@ query MinMandatoryRestriction{
 ### Schedule with maximum course restriction
 ```graphql
 query MaxCourseRestriction{
-  scheduleRestriction(
-    courses:[{courseId: "LING 506", mandatory: true}, {courseId: "CS 576", mandatory: true}], 
+  schedule(
+    courses:[
+      {courseId: "LING 506", mandatory: true}, 
+      {courseId: "CS 576", mandatory: true}
+    ]
     restrictions:{
-    	maxCourses: 1
+      maxCourses: 1
       minMandatory: null
       breaks: []
-    }) {
+    }
+    factors: {
+        gpa: null,
+        aRate: null
+    }
+  ) {
     success
     errors
     schedules {
@@ -186,16 +223,23 @@ query MaxCourseRestriction{
 ### Schedule with break restriction
 ```graphql
 query BreakRestriction{
-  scheduleRestriction(
-    courses:[{courseId: "LING 506", mandatory: true}, {courseId: "CS 576", mandatory: true}], 
+  schedule(
+    courses:[
+      {courseId: "LING 506", mandatory: true}, 
+      {courseId: "CS 576", mandatory: true}
+    ]
     restrictions:{
-    	maxCourses: null
+      maxCourses: null
       minMandatory: null
       breaks: [{
         start: "07:00 AM"
         end: "08:00 PM"
         daysOfTheWeek: "MTWRF"
       }]
+    }
+    factors: {
+        gpa: null,
+        aRate: null
     }) {
     success
     errors
@@ -214,6 +258,180 @@ query BreakRestriction{
 ```
 ![alt text](../screenshots/graphql_break_schedule.png "schedule")
 
+### Schedule with average gpa and A rate factors
+```graphql
+query ScoreFactor{
+  schedule(
+    courses:[
+      {courseId: "MATH 221", mandatory: true}, 
+      {courseId: "CS 173", mandatory: true},
+      {courseId: "CS 411", mandatory: true}
+    ]
+    restrictions:{
+      maxCourses: 2
+      minMandatory: 2
+      breaks: []
+    }
+    factors: {
+        gpa: 1,
+        aRate: 0.5
+    }) {
+    success
+    errors
+    schedules {
+      sections {
+        sectionId
+        meetings {
+          start
+          end
+          daysOfTheWeek
+        }
+      }
+    }
+  }
+}
+```
+![alt text](../screenshots/graphql_scoring.png "schedule")
+
+```graphql
+query ScoreFactor2{
+  schedule(
+    courses:[
+      {courseId: "MATH 221", mandatory: true}, 
+      {courseId: "CS 173", mandatory: true},
+      {courseId: "CS 411", mandatory: true}
+    ]
+    restrictions:{
+      maxCourses: 2
+      minMandatory: 2
+      breaks: []
+    }
+    factors: {
+        gpa: 0.1,
+        aRate: 1
+    }) {
+    success
+    errors
+    schedules {
+      sections {
+        sectionId
+        meetings {
+          start
+          end
+          daysOfTheWeek
+        }
+      }
+    }
+  }
+}
+```
+![alt text](../screenshots/graphql_scoring_2.png "schedule")
+### Schedule returning score
+```graphql
+query ShowScheduleScore{
+  schedule(
+    courses:[
+      {courseId: "MATH 221", mandatory: true}, 
+      {courseId: "CS 173", mandatory: true},
+      {courseId: "CS 411", mandatory: true}
+    ]
+    restrictions:{
+      maxCourses: 2
+      minMandatory: 2
+      breaks: []
+    }
+    factors: {
+        gpa: 1,
+        aRate: 0.5
+    }) {
+    success
+    errors
+    schedules {
+      sections {
+        sectionId
+        meetings {
+          start
+          end
+          daysOfTheWeek
+        }
+      }
+      score
+    }
+  }
+}
+```
+![alt text](../screenshots/graphql_show_score.png "schedule")
+
+### Schedule orders higher score at the top
+```graphql
+query Ordering{
+  schedule(
+    courses:[
+      {courseId: "MATH 221", mandatory: true}, 
+      {courseId: "CS 173", mandatory: true},
+      {courseId: "CS 411", mandatory: true}
+    ]
+    restrictions:{
+      maxCourses: 3
+      minMandatory: 0
+      breaks: []
+    }
+    factors: {
+        gpa: 1,
+        aRate: 0.5
+    }) {
+    success
+    errors
+    schedules {
+      sections {
+        sectionId
+        meetings {
+          start
+          end
+          daysOfTheWeek
+        }
+      }
+      score
+    }
+  }
+}
+```
+![alt text](../screenshots/graphql_order.png "schedule")
+### Schedule courses without GPA information
+```graphql
+query ScoreCoursesWithoutGPAInformation{
+  schedule(
+    courses:[
+      {courseId: "LING 506", mandatory: true}, 
+      {courseId: "CS 173", mandatory: true},
+      {courseId: "CS 576", mandatory: true}
+    ]
+    restrictions:{
+      maxCourses: 2
+      minMandatory: 2
+      breaks: []
+    }
+    factors: {
+        gpa: 1,
+        aRate: 0.5
+    }) {
+    success
+    errors
+    schedules {
+      sections {
+        sectionId
+        meetings {
+          start
+          end
+          daysOfTheWeek
+        }
+      }
+      score
+    }
+  }
+}
+```
+![alt text](../screenshots/withoutGPAInfo.png "schedule")
 
 ### Saving Schedule
 ```graphql
@@ -242,3 +460,18 @@ query GetUser {
 }
 ```
 ![alt text](../screenshots/graphql_get_star_schedule.png "schedule")
+
+### Schedule Scoring
+```graphql
+query GetUser {
+  user {
+    staredSchedules {
+      sectionId
+      course {
+        courseNum
+        subjectId
+      }
+    }
+  }
+}
+```

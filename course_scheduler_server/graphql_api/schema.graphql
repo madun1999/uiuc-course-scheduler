@@ -20,6 +20,12 @@ type Meeting {
     roomNumber: String
     instructors: [Instructor!]!
 }
+
+type GPAInfo {
+    gpa: Float!
+    a_rate: Float!
+}
+
 type Section {
     sectionId: Int!         # CRN
     course: Course
@@ -31,6 +37,7 @@ type Section {
     startDate: String
     endDate: String
     meetings: [Meeting!]!
+    gpaInfo: GPAInfo
 }
 type Instructor {
     firstName: String!
@@ -104,7 +111,6 @@ type Query {
     course(courseId: String!): Course!          # null if error
     user: User                                    # Only current user, null if error
     schedule(courses: [AnnotatedCourseId!]!, restrictions: RestrictionInput!, factors: FactorInput!): ScheduleResult!
-    scheduleRestriction(courses: [AnnotatedCourseId!]!, restrictions: RestrictionInput!): ScheduleResult! # Strings are sectionIds
 }
 
 type Mutation {
