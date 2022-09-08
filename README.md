@@ -1,5 +1,4 @@
-# sp21-cs242-project Course Scheduler
-cs242 final project
+# UIUC Course Scheduler
 
 ## Prerequisites
 - python
